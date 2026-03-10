@@ -1,0 +1,359 @@
+diff --git a/node_modules/react-native-kline-view/RNKLineView.podspec b/node_modules/react-native-kline-view/RNKLineView.podspec
+index 02de09e..0cf38d2 100644
+--- a/node_modules/react-native-kline-view/RNKLineView.podspec
++++ b/node_modules/react-native-kline-view/RNKLineView.podspec
+@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
+   s.swift_version = "4.0"
+ 
+   s.dependency "React"
+-  s.dependency 'lottie-ios', '~> 4.5.0'
++  s.dependency 'lottie-ios', '>= 4.5.0', '< 5.0'
+ 
+ end
+ 
+diff --git a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/HTKLineConfigManager.java b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/HTKLineConfigManager.java
+index 52ecba7..0e181b5 100644
+--- a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/HTKLineConfigManager.java
++++ b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/HTKLineConfigManager.java
+@@ -23,6 +23,8 @@ public class HTKLineConfigManager {
+ 
+ 	public Boolean shouldScrollToEnd = true;
+ 
++    public Boolean scrollEnabled = true;
++
+ 
+ 	public int shotBackgroundColor = Color.RED;
+ 
+@@ -223,6 +225,27 @@ public class HTKLineConfigManager {
+         entity.j = ((Number)this.getOrDefault(keyValue, "kdjK", 0.0)).floatValue();
+         entity.rsiList = HTKLineTargetItem.packModelArray((List) this.getOrDefault(keyValue, "rsiList", new ArrayList()));
+         entity.wrList = HTKLineTargetItem.packModelArray((List) this.getOrDefault(keyValue, "wrList", new ArrayList()));
++
++        Object openTradePrice = keyValue.get("openTradePrice");
++        if (openTradePrice instanceof Number) {
++            entity.openTradePrice = ((Number) openTradePrice).floatValue();
++        }
++
++        Object closeTradePrice = keyValue.get("closeTradePrice");
++        if (closeTradePrice instanceof Number) {
++            entity.closeTradePrice = ((Number) closeTradePrice).floatValue();
++        }
++
++        Object openTradeCount = keyValue.get("openTradeCount");
++        if (openTradeCount instanceof Number) {
++            entity.openTradeCount = ((Number) openTradeCount).intValue();
++        }
++
++        Object closeTradeCount = keyValue.get("closeTradeCount");
++        if (closeTradeCount instanceof Number) {
++            entity.closeTradeCount = ((Number) closeTradeCount).intValue();
++        }
++
+         return entity;
+     }
+ 
+@@ -319,6 +342,11 @@ public class HTKLineConfigManager {
+             this.shouldScrollToEnd = shouldScrollToEnd;
+         }
+ 
++        Boolean scrollEnabled = (Boolean)optionList.get("scrollEnabled");
++        if (scrollEnabled != null) {
++            this.scrollEnabled = scrollEnabled;
++        }
++
+         if (shouldReloadDrawItemIndex >= HTDrawState.showPencil) {
+             this.shouldScrollToEnd = false;
+         }
+diff --git a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/KLineEntity.java b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/KLineEntity.java
+index 3b46660..cfa0f67 100755
+--- a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/KLineEntity.java
++++ b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/KLineEntity.java
+@@ -178,6 +178,14 @@ public class KLineEntity implements IKLine {
+ 
+     public float MA10Volume;
+ 
++    public float openTradePrice = Float.NaN;
++
++    public float closeTradePrice = Float.NaN;
++
++    public int openTradeCount = 0;
++
++    public int closeTradeCount = 0;
++
+ 
+     public List<HTKLineTargetItem> maList = new ArrayList();
+     public List<HTKLineTargetItem> maVolumeList = new ArrayList();
+diff --git a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/container/HTKLineContainerView.java b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/container/HTKLineContainerView.java
+index 06b5c94..ecfb547 100644
+--- a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/container/HTKLineContainerView.java
++++ b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/container/HTKLineContainerView.java
+@@ -51,6 +51,7 @@ public class HTKLineContainerView extends RelativeLayout {
+     }
+ 
+     public void reloadConfigManager() {
++        klineView.setScrollEnable(klineView.configManager.scrollEnabled);
+         klineView.changeMainDrawType(klineView.configManager.primaryStatus);
+         klineView.changeSecondDrawType(klineView.configManager.secondStatus);
+         klineView.setMainDrawLine(klineView.configManager.isMinute);
+diff --git a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/draw/MainDraw.java b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/draw/MainDraw.java
+index 55c2091..2d5c584 100755
+--- a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/draw/MainDraw.java
++++ b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/draw/MainDraw.java
+@@ -35,6 +35,9 @@ public class MainDraw implements IChartDraw<ICandle> {
+     private Paint primaryPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+ 
+     private Paint minuteGradientPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
++    private Paint openTradePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
++    private Paint closeTradePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
++    private Paint markerCountTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+ 
+     private Paint mSelectorTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+     private Paint mSelectorBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+@@ -60,12 +63,21 @@ public class MainDraw implements IChartDraw<ICandle> {
+         minuteGradientPaint.setStrokeJoin(Paint.Join.ROUND);
+         minuteGradientPaint.setStrokeCap(Paint.Cap.ROUND);
+         minuteGradientPaint.setStyle(Paint.Style.FILL);
++
++        openTradePaint.setStyle(Paint.Style.FILL);
++        closeTradePaint.setStyle(Paint.Style.FILL);
++
++        markerCountTextPaint.setColor(Color.WHITE);
++        markerCountTextPaint.setTextAlign(Paint.Align.CENTER);
++        markerCountTextPaint.setFakeBoldText(true);
+     }
+ 
+     public void reloadColor(BaseKLineChartView view) {
+         mRedPaint.setColor(view.configManager.increaseColor);
+         mGreenPaint.setColor(view.configManager.decreaseColor);
+         mLinePaint.setColor(view.configManager.minuteLineColor);
++        openTradePaint.setColor(view.configManager.increaseColor);
++        closeTradePaint.setColor(view.configManager.decreaseColor);
+     }
+ 
+     public void setPrimaryStatus(PrimaryStatus primaryStatus) {
+@@ -123,6 +135,9 @@ public class MainDraw implements IChartDraw<ICandle> {
+     @Override
+     public void drawTranslated(@Nullable ICandle lastPoint, @NonNull ICandle curPoint, float lastX, float curX, @NonNull Canvas canvas, @NonNull BaseKLineChartView view, int position) {
+         if (view.isMinute) {
++            KLineEntity currentItem = (KLineEntity) curPoint;
++            drawTradeMarker(view, canvas, curX, currentItem.openTradePrice, currentItem.closeTradePrice, currentItem.openTradeCount, currentItem.closeTradeCount, openTradePaint, false);
++            drawTradeMarker(view, canvas, curX, currentItem.closeTradePrice, currentItem.openTradePrice, currentItem.closeTradeCount, currentItem.openTradeCount, closeTradePaint, true);
+             return;
+         }
+         drawCandle(view, canvas, curX, curPoint.getHighPrice(), curPoint.getLowPrice(), curPoint.getOpenPrice(), curPoint.getClosePrice());
+@@ -151,6 +166,30 @@ public class MainDraw implements IChartDraw<ICandle> {
+             }
+         }
+ 
++        KLineEntity currentItem = (KLineEntity) curPoint;
++        drawTradeMarker(view, canvas, curX, currentItem.openTradePrice, currentItem.closeTradePrice, currentItem.openTradeCount, currentItem.closeTradeCount, openTradePaint, false);
++        drawTradeMarker(view, canvas, curX, currentItem.closeTradePrice, currentItem.openTradePrice, currentItem.closeTradeCount, currentItem.openTradeCount, closeTradePaint, true);
++
++    }
++
++    private void drawTradeMarker(BaseKLineChartView view, Canvas canvas, float x, float price, float siblingPrice, int tradeCount, int siblingCount, Paint paint, boolean shouldShiftOnOverlap) {
++        if (Float.isNaN(price) || Float.isInfinite(price)) {
++            return;
++        }
++
++        float y = view.yFromValue(price);
++        float radius = ViewUtil.Dp2Px(mContext, 3.5f) + Math.max(0, Math.min(tradeCount - 1, 3)) * ViewUtil.Dp2Px(mContext, 0.8f);
++        float markerY = y;
++
++        canvas.drawCircle(x, markerY, radius, paint);
++
++        if (tradeCount > 1) {
++            String label = tradeCount > 9 ? "9+" : String.valueOf(tradeCount);
++            markerCountTextPaint.setTextSize(ViewUtil.Dp2Px(mContext, tradeCount > 9 ? 7f : 8f));
++            Paint.FontMetrics fontMetrics = markerCountTextPaint.getFontMetrics();
++            float textY = markerY - (fontMetrics.ascent + fontMetrics.descent) / 2f;
++            canvas.drawText(label, x, textY, markerCountTextPaint);
++        }
+     }
+ 
+     @Override
+diff --git a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/draw/VolumeDraw.java b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/draw/VolumeDraw.java
+index d627a8b..84c4bb1 100755
+--- a/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/draw/VolumeDraw.java
++++ b/node_modules/react-native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/draw/VolumeDraw.java
+@@ -81,6 +81,10 @@ public class VolumeDraw implements IChartDraw<IVolume> {
+     @Override
+     public void drawText(
+             @NonNull Canvas canvas, @NonNull BaseKLineChartView view, int position, float x, float y) {
++        if (view.configManager.volumeFlex <= 0f) {
++            return;
++        }
++
+         IValueFormatter formatter = getValueFormatter();
+         KLineEntity point = (KLineEntity) view.getItem(position);
+         if (formatter instanceof ValueFormatter) {
+diff --git a/node_modules/react-native-kline-view/ios/Classes/HTKLineConfigManager.swift b/node_modules/react-native-kline-view/ios/Classes/HTKLineConfigManager.swift
+index 98b58b9..c64d009 100644
+--- a/node_modules/react-native-kline-view/ios/Classes/HTKLineConfigManager.swift
++++ b/node_modules/react-native-kline-view/ios/Classes/HTKLineConfigManager.swift
+@@ -70,6 +70,8 @@ class HTKLineConfigManager: NSObject {
+ 
+     var shouldScrollToEnd = true
+ 
++    var scrollEnabled = true
++
+     var maList = [HTKLineItemModel]()
+ 
+     var maVolumeList = [HTKLineItemModel]()
+@@ -383,6 +385,9 @@ class HTKLineConfigManager: NSObject {
+         if let shouldScrollToEnd = optionList["shouldScrollToEnd"] as? Bool {
+             self.shouldScrollToEnd = shouldScrollToEnd
+         }
++        if let scrollEnabled = optionList["scrollEnabled"] as? Bool {
++            self.scrollEnabled = scrollEnabled
++        }
+         if shouldReloadDrawItemIndex >= HTDrawState.showPencil.rawValue {
+             self.shouldScrollToEnd = false
+         }
+diff --git a/node_modules/react-native-kline-view/ios/Classes/HTKLineModel.swift b/node_modules/react-native-kline-view/ios/Classes/HTKLineModel.swift
+index aac0a08..3087d2e 100644
+--- a/node_modules/react-native-kline-view/ios/Classes/HTKLineModel.swift
++++ b/node_modules/react-native-kline-view/ios/Classes/HTKLineModel.swift
+@@ -78,6 +78,14 @@ class HTKLineModel: NSObject {
+ 
+     var wrList = [HTKLineItemModel]()
+ 
++    var openTradePrice: CGFloat = .nan
++
++    var closeTradePrice: CGFloat = .nan
++
++    var openTradeCount: Int = 0
++
++    var closeTradeCount: Int = 0
++
+     var selectedItemList = [[String: Any]]()
+ 
+     lazy var increment: Bool = {
+@@ -107,6 +115,27 @@ class HTKLineModel: NSObject {
+         model.kdjK = dictionary["kdjK"] as? CGFloat ?? 0
+         model.kdjD = dictionary["kdjD"] as? CGFloat ?? 0
+         model.kdjJ = dictionary["kdjJ"] as? CGFloat ?? 0
++
++        if let openTradePrice = dictionary["openTradePrice"] as? CGFloat {
++            model.openTradePrice = openTradePrice
++        }
++
++        if let closeTradePrice = dictionary["closeTradePrice"] as? CGFloat {
++            model.closeTradePrice = closeTradePrice
++        }
++
++        if let openTradeCount = dictionary["openTradeCount"] as? Int {
++            model.openTradeCount = openTradeCount
++        } else if let openTradeCount = dictionary["openTradeCount"] as? CGFloat {
++            model.openTradeCount = Int(openTradeCount)
++        }
++
++        if let closeTradeCount = dictionary["closeTradeCount"] as? Int {
++            model.closeTradeCount = closeTradeCount
++        } else if let closeTradeCount = dictionary["closeTradeCount"] as? CGFloat {
++            model.closeTradeCount = Int(closeTradeCount)
++        }
++
+         var selectedItemList = dictionary["selectedItemList"] as? [[String: Any]] ?? [[String: Any]]()
+         for (i, dictionary) in selectedItemList.enumerated() {
+             if let color = dictionary["color"] as? Int {
+diff --git a/node_modules/react-native-kline-view/ios/Classes/HTKLineView.swift b/node_modules/react-native-kline-view/ios/Classes/HTKLineView.swift
+index fc3c39f..e800fe3 100644
+--- a/node_modules/react-native-kline-view/ios/Classes/HTKLineView.swift
++++ b/node_modules/react-native-kline-view/ios/Classes/HTKLineView.swift
+@@ -84,6 +84,7 @@ class HTKLineView: UIScrollView {
+     }
+ 
+     func reloadConfigManager(_ configManager: HTKLineConfigManager) {
++        isScrollEnabled = configManager.scrollEnabled
+ 
+         switch configManager.childType {
+         case .none:
+diff --git a/node_modules/react-native-kline-view/ios/Classes/HTMainDraw.swift b/node_modules/react-native-kline-view/ios/Classes/HTMainDraw.swift
+index b4ee794..109c052 100644
+--- a/node_modules/react-native-kline-view/ios/Classes/HTMainDraw.swift
++++ b/node_modules/react-native-kline-view/ios/Classes/HTMainDraw.swift
+@@ -10,6 +10,49 @@ import UIKit
+ 
+ class HTMainDraw: NSObject, HTKLineDrawProtocol {
+ 
++    private func markerRadius(_ count: Int) -> CGFloat {
++        return 3.5 + CGFloat(max(0, min(count - 1, 3))) * 0.8
++    }
++
++    private func drawTradeMarker(_ value: CGFloat, _ siblingValue: CGFloat, _ count: Int, _ siblingCount: Int, _ index: Int, _ maxValue: CGFloat, _ minValue: CGFloat, _ baseY: CGFloat, _ height: CGFloat, _ context: CGContext, _ configManager: HTKLineConfigManager, _ color: UIColor, _ shouldShiftOnOverlap: Bool) {
++        guard !value.isNaN, !value.isInfinite else {
++            return
++        }
++
++        let itemWidth = configManager.itemWidth
++        let scale = (maxValue - minValue) / height
++        guard scale != 0 else {
++            return
++        }
++
++        let paddingHorizontal = (itemWidth - configManager.lineWidth) / 2
++        let x = CGFloat(index) * itemWidth + paddingHorizontal
++        let y = baseY + (maxValue - value) / scale
++        let radius = markerRadius(count)
++
++        var markerY = y
++
++        context.setFillColor(color.cgColor)
++        context.fillEllipse(in: CGRect(x: x - radius, y: markerY - radius, width: radius * 2, height: radius * 2))
++
++        if count > 1 {
++            let text = count > 9 ? "9+" : "\(count)"
++            let font = UIFont.systemFont(ofSize: count > 9 ? 7 : 8, weight: .semibold)
++            let attributes: [NSAttributedString.Key: Any] = [
++                .font: font,
++                .foregroundColor: UIColor.white,
++            ]
++            let textSize = text.size(withAttributes: attributes)
++            let textRect = CGRect(
++                x: x - textSize.width / 2,
++                y: markerY - textSize.height / 2,
++                width: textSize.width,
++                height: textSize.height
++            )
++            text.draw(in: textRect, withAttributes: attributes)
++        }
++    }
++
+     func minMaxRange(_ visibleModelArray: [HTKLineModel], _ configManager: HTKLineConfigManager) -> Range<CGFloat> {
+         var maxValue = CGFloat.leastNormalMagnitude
+         var minValue = CGFloat.greatestFiniteMagnitude
+@@ -74,6 +117,8 @@ class HTMainDraw: NSObject, HTKLineDrawProtocol {
+     func drawLine(_ model: HTKLineModel, _ lastModel: HTKLineModel, _ maxValue: CGFloat, _ minValue: CGFloat, _ baseY: CGFloat, _ height: CGFloat, _ index: Int, _ lastIndex: Int, _ context: CGContext, _ configManager: HTKLineConfigManager) {
+         if (configManager.isMinute) {
+             drawLine(value: model.close, lastValue: lastModel.close, maxValue: maxValue, minValue: minValue, baseY: baseY, height: height, index: index, lastIndex: lastIndex, color: configManager.minuteLineColor, isBezier: true, context: context, configManager: configManager)
++            drawTradeMarker(model.openTradePrice, model.closeTradePrice, model.openTradeCount, model.closeTradeCount, index, maxValue, minValue, baseY, height, context, configManager, configManager.increaseColor, false)
++            drawTradeMarker(model.closeTradePrice, model.openTradePrice, model.closeTradeCount, model.openTradeCount, index, maxValue, minValue, baseY, height, context, configManager, configManager.decreaseColor, true)
+         } else {
+             switch configManager.mainType {
+             case .none:
+@@ -93,6 +138,9 @@ class HTMainDraw: NSObject, HTKLineDrawProtocol {
+                     drawLine(value: item["value"] as? CGFloat ?? 0, lastValue: item["lastValue"] as? CGFloat ?? 0, maxValue: maxValue, minValue: minValue, baseY: baseY, height: height, index: index, lastIndex: lastIndex, color: item["color"] as? UIColor ?? UIColor.orange, isBezier: false, context: context, configManager: configManager)
+                 }
+             }
++
++            drawTradeMarker(model.openTradePrice, model.closeTradePrice, model.openTradeCount, model.closeTradeCount, index, maxValue, minValue, baseY, height, context, configManager, configManager.increaseColor, false)
++            drawTradeMarker(model.closeTradePrice, model.openTradePrice, model.closeTradeCount, model.openTradeCount, index, maxValue, minValue, baseY, height, context, configManager, configManager.decreaseColor, true)
+         }
+     }
+ 
+diff --git a/node_modules/react-native-kline-view/ios/Classes/HTVolumeDraw.swift b/node_modules/react-native-kline-view/ios/Classes/HTVolumeDraw.swift
+index 9506aaf..1bfe62d 100644
+--- a/node_modules/react-native-kline-view/ios/Classes/HTVolumeDraw.swift
++++ b/node_modules/react-native-kline-view/ios/Classes/HTVolumeDraw.swift
+@@ -50,6 +50,10 @@ class HTVolumeDraw: NSObject, HTKLineDrawProtocol {
+     }
+ 
+     func drawText(_ model: HTKLineModel, _ baseX: CGFloat, _ baseY: CGFloat, _ context: CGContext, _ configManager: HTKLineConfigManager) {
++        if configManager.volumeFlex <= 0 {
++            return
++        }
++
+         var x = baseX
+         let font = configManager.createFont(configManager.headerTextFontSize)
+         x += drawText(title: String(format: "VOL:%@", configManager.precision(model.volume, configManager.volume)), point: CGPoint.init(x: x, y: baseY), color: configManager.targetColorList[5], font: font, context: context, configManager: configManager)

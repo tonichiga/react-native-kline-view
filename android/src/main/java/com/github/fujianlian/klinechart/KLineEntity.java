@@ -178,6 +178,14 @@ public class KLineEntity implements IKLine {
 
     public float MA10Volume;
 
+    public float openTradePrice = Float.NaN;
+
+    public float closeTradePrice = Float.NaN;
+
+    public int openTradeCount = 0;
+
+    public int closeTradeCount = 0;
+
 
     public List<HTKLineTargetItem> maList = new ArrayList();
     public List<HTKLineTargetItem> maVolumeList = new ArrayList();

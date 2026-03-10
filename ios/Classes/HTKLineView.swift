@@ -84,6 +84,7 @@ class HTKLineView: UIScrollView {
     }
 
     func reloadConfigManager(_ configManager: HTKLineConfigManager) {
+        isScrollEnabled = configManager.scrollEnabled
 
         switch configManager.childType {
         case .none:

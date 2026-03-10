@@ -51,6 +51,7 @@ public class HTKLineContainerView extends RelativeLayout {
     }
 
     public void reloadConfigManager() {
+        klineView.setScrollEnable(klineView.configManager.scrollEnabled);
         klineView.changeMainDrawType(klineView.configManager.primaryStatus);
         klineView.changeSecondDrawType(klineView.configManager.secondStatus);
         klineView.setMainDrawLine(klineView.configManager.isMinute);

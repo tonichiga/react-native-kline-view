@@ -23,6 +23,8 @@ public class HTKLineConfigManager {
 
 	public Boolean shouldScrollToEnd = true;
 
+    public Boolean scrollEnabled = true;
+
 
 	public int shotBackgroundColor = Color.RED;
 
@@ -223,6 +225,27 @@ public class HTKLineConfigManager {
         entity.j = ((Number)this.getOrDefault(keyValue, "kdjK", 0.0)).floatValue();
         entity.rsiList = HTKLineTargetItem.packModelArray((List) this.getOrDefault(keyValue, "rsiList", new ArrayList()));
         entity.wrList = HTKLineTargetItem.packModelArray((List) this.getOrDefault(keyValue, "wrList", new ArrayList()));
+
+        Object openTradePrice = keyValue.get("openTradePrice");
+        if (openTradePrice instanceof Number) {
+            entity.openTradePrice = ((Number) openTradePrice).floatValue();
+        }
+
+        Object closeTradePrice = keyValue.get("closeTradePrice");
+        if (closeTradePrice instanceof Number) {
+            entity.closeTradePrice = ((Number) closeTradePrice).floatValue();
+        }
+
+        Object openTradeCount = keyValue.get("openTradeCount");
+        if (openTradeCount instanceof Number) {
+            entity.openTradeCount = ((Number) openTradeCount).intValue();
+        }
+
+        Object closeTradeCount = keyValue.get("closeTradeCount");
+        if (closeTradeCount instanceof Number) {
+            entity.closeTradeCount = ((Number) closeTradeCount).intValue();
+        }
+
         return entity;
     }
 
@@ -317,6 +340,11 @@ public class HTKLineConfigManager {
         Boolean shouldScrollToEnd = (Boolean)optionList.get("shouldScrollToEnd");
         if (shouldScrollToEnd != null) {
             this.shouldScrollToEnd = shouldScrollToEnd;
+        }
+
+        Boolean scrollEnabled = (Boolean)optionList.get("scrollEnabled");
+        if (scrollEnabled != null) {
+            this.scrollEnabled = scrollEnabled;
         }
 
         if (shouldReloadDrawItemIndex >= HTDrawState.showPencil) {

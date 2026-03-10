@@ -78,6 +78,14 @@ class HTKLineModel: NSObject {
 
     var wrList = [HTKLineItemModel]()
 
+    var openTradePrice: CGFloat = .nan
+
+    var closeTradePrice: CGFloat = .nan
+
+    var openTradeCount: Int = 0
+
+    var closeTradeCount: Int = 0
+
     var selectedItemList = [[String: Any]]()
 
     lazy var increment: Bool = {
@@ -107,6 +115,27 @@ class HTKLineModel: NSObject {
         model.kdjK = dictionary["kdjK"] as? CGFloat ?? 0
         model.kdjD = dictionary["kdjD"] as? CGFloat ?? 0
         model.kdjJ = dictionary["kdjJ"] as? CGFloat ?? 0
+
+        if let openTradePrice = dictionary["openTradePrice"] as? CGFloat {
+            model.openTradePrice = openTradePrice
+        }
+
+        if let closeTradePrice = dictionary["closeTradePrice"] as? CGFloat {
+            model.closeTradePrice = closeTradePrice
+        }
+
+        if let openTradeCount = dictionary["openTradeCount"] as? Int {
+            model.openTradeCount = openTradeCount
+        } else if let openTradeCount = dictionary["openTradeCount"] as? CGFloat {
+            model.openTradeCount = Int(openTradeCount)
+        }
+
+        if let closeTradeCount = dictionary["closeTradeCount"] as? Int {
+            model.closeTradeCount = closeTradeCount
+        } else if let closeTradeCount = dictionary["closeTradeCount"] as? CGFloat {
+            model.closeTradeCount = Int(closeTradeCount)
+        }
+
         var selectedItemList = dictionary["selectedItemList"] as? [[String: Any]] ?? [[String: Any]]()
         for (i, dictionary) in selectedItemList.enumerated() {
             if let color = dictionary["color"] as? Int {
