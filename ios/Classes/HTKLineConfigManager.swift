@@ -72,6 +72,8 @@ class HTKLineConfigManager: NSObject {
 
     var scrollEnabled = true
 
+    var fitBarsCount: Int = 0
+
     var maList = [HTKLineItemModel]()
 
     var maVolumeList = [HTKLineItemModel]()
@@ -321,8 +323,17 @@ class HTKLineConfigManager: NSObject {
     }
 
     func reloadOptionList(_ optionList: [String: Any]) {
+        if let fitBarsCount = optionList["fitBarsCount"] as? Int {
+            self.fitBarsCount = max(0, fitBarsCount)
+        } else if let fitBarsCount = optionList["fitBarsCount"] as? CGFloat {
+            self.fitBarsCount = max(0, Int(fitBarsCount))
+        }
+
         if let modelList = optionList["modelArray"] as? [[String: Any]] {
             modelArray = HTKLineModel.packModelArray(modelList)
+            if fitBarsCount > 0, modelArray.count > fitBarsCount {
+                modelArray = Array(modelArray.suffix(fitBarsCount))
+            }
         }
         
 

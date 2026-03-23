@@ -25,6 +25,8 @@ public class HTKLineConfigManager {
 
     public Boolean scrollEnabled = true;
 
+    public int fitBarsCount = 0;
+
 
 	public int shotBackgroundColor = Color.RED;
 
@@ -264,9 +266,19 @@ public class HTKLineConfigManager {
 
     public void reloadOptionList(Map optionList) {
 
+        Number fitBarsCountValue = (Number) optionList.get("fitBarsCount");
+        if (fitBarsCountValue != null) {
+            this.fitBarsCount = Math.max(0, fitBarsCountValue.intValue());
+        }
+
     	List modelArray = (List)optionList.get("modelArray");
     	if (modelArray != null) {
     		this.modelArray = this.packModelList(modelArray);
+
+            if (this.fitBarsCount > 0 && this.modelArray.size() > this.fitBarsCount) {
+                int fromIndex = this.modelArray.size() - this.fitBarsCount;
+                this.modelArray = new ArrayList<>(this.modelArray.subList(fromIndex, this.modelArray.size()));
+            }
     	}
 
     	Map targetList = (Map)optionList.get("targetList");

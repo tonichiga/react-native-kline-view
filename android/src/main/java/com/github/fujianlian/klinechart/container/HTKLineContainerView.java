@@ -51,6 +51,28 @@ public class HTKLineContainerView extends RelativeLayout {
     }
 
     public void reloadConfigManager() {
+        if (klineView.configManager.fitBarsCount > 0 && getWidth() > 0) {
+            int visibleCount = Math.min(
+                    klineView.configManager.modelArray.size(),
+                    klineView.configManager.fitBarsCount
+            );
+
+            if (visibleCount > 0) {
+                float availableWidth = Math.max(0f, getWidth() - klineView.configManager.paddingRight);
+                if (availableWidth > 0f) {
+                    float fittedItemWidth = availableWidth / visibleCount;
+                    fittedItemWidth = Math.max(0.2f, fittedItemWidth);
+                    klineView.configManager.itemWidth = fittedItemWidth;
+                    klineView.configManager.candleWidth = Math.max(0.1f, fittedItemWidth * 0.72f);
+                    klineView.configManager.scrollEnabled = false;
+                    klineView.setScaleEnable(false);
+                    klineView.resetChartScale();
+                }
+            }
+        } else {
+            klineView.setScaleEnable(true);
+        }
+
         klineView.setScrollEnable(klineView.configManager.scrollEnabled);
         klineView.changeMainDrawType(klineView.configManager.primaryStatus);
         klineView.changeSecondDrawType(klineView.configManager.secondStatus);

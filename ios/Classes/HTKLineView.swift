@@ -138,6 +138,22 @@ class HTKLineView: UIScrollView {
     }
 
     func reloadContentSize() {
+        if configManager.fitBarsCount > 0, bounds.size.width > configManager.paddingRight {
+            let visibleCount = max(1, min(configManager.modelArray.count, configManager.fitBarsCount))
+            let availableWidth = bounds.size.width - configManager.paddingRight
+            let fittedItemWidth = max(0.2, availableWidth / CGFloat(visibleCount))
+            configManager._itemWidth = fittedItemWidth
+            configManager._candleWidth = max(0.1, fittedItemWidth * 0.72)
+            configManager.reloadScrollViewScale(1)
+            scale = 1
+            isScrollEnabled = false
+            setZoomScale(1, animated: false)
+            panGestureRecognizer.isEnabled = false
+            panGestureRecognizer.isEnabled = true
+            return
+        }
+
+        isScrollEnabled = configManager.scrollEnabled
         configManager.reloadScrollViewScale(scale)
         let contentWidth = configManager.itemWidth * CGFloat(configManager.modelArray.count) + configManager.paddingRight
         contentSize = CGSize.init(width: contentWidth, height: frame.size.height)
@@ -635,6 +651,10 @@ extension HTKLineView: UIScrollViewDelegate {
 
     @objc
     func pinchSelector(_ gesture: UIPinchGestureRecognizer) {
+        if configManager.fitBarsCount > 0 {
+            return
+        }
+
         switch gesture.state {
         case .changed:
             scale += (gesture.scale - 1) / 10
