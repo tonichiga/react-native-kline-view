@@ -1,0 +1,26 @@
+name: native_kline_view
+description: Native KLine View for Flutter (iOS/Android platform view).
+version: 0.0.1
+homepage: https://github.com/hellohublot/native-kline-view
+
+environment:
+  sdk: ">=2.17.0 <4.0.0"
+  flutter: ">=2.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.github.fujianlian.native_kline_view
+        pluginClass: NativeKlineViewPlugin
+      ios:
+        pluginClass: NativeKlineViewPlugin
+

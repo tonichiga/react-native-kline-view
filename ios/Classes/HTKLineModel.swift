@@ -109,8 +109,10 @@ class HTKLineModel: NSObject {
         model.kdjJ = dictionary["kdjJ"] as? CGFloat ?? 0
         var selectedItemList = dictionary["selectedItemList"] as? [[String: Any]] ?? [[String: Any]]()
         for (i, dictionary) in selectedItemList.enumerated() {
-            if let color = dictionary["color"] as? Int {
-                selectedItemList[i]["color"] = RCTConvert.uiColor(color)
+            if let colorValue = dictionary["color"] {
+                if let color = HTColorConvert.uiColorOptional(colorValue) {
+                    selectedItemList[i]["color"] = color
+                }
             }
         }
         model.selectedItemList = selectedItemList

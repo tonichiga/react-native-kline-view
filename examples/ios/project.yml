@@ -1,0 +1,23 @@
+name: NativeKLineExample
+options:
+  bundleIdPrefix: com.github.fujianlian
+  deploymentTarget:
+    iOS: "13.0"
+targets:
+  NativeKLineExample:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    resources:
+      - Resources
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.github.fujianlian.klineexample
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: NativeKLineExample
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight

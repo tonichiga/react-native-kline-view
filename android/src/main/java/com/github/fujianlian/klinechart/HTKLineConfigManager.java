@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.graphics.Typeface;
-import com.facebook.react.bridge.Callback;
 import com.github.fujianlian.klinechart.container.HTDrawState;
 import com.github.fujianlian.klinechart.container.HTDrawType;
 import com.github.fujianlian.klinechart.draw.PrimaryStatus;
@@ -51,11 +50,11 @@ public class HTKLineConfigManager {
 
     public Boolean drawShouldTrash = false;
 
-    public Callback onDrawItemComplete;
+    public HTKLineCallback onDrawItemComplete;
 
-    public Callback onDrawItemDidTouch;
+    public HTKLineCallback onDrawItemDidTouch;
 
-    public Callback onDrawPointComplete;
+    public HTKLineCallback onDrawPointComplete;
 
 
 

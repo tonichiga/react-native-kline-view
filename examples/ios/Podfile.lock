@@ -1,0 +1,23 @@
+PODS:
+  - lottie-ios (4.5.2)
+  - NativeKLineView (1.0.0):
+    - lottie-ios (~> 4.5.0)
+
+DEPENDENCIES:
+  - NativeKLineView (from `../../ios`)
+
+SPEC REPOS:
+  trunk:
+    - lottie-ios
+
+EXTERNAL SOURCES:
+  NativeKLineView:
+    :path: "../../ios"
+
+SPEC CHECKSUMS:
+  lottie-ios: 96784afc26ea031d3e2b6cae342a4b8915072489
+  NativeKLineView: ef0b3179e152ea818a99200333b4d0981aa4941b
+
+PODFILE CHECKSUM: abee25b534e0a486866f5ab04e74c3a0876bba6b
+
+COCOAPODS: 1.15.2

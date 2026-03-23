@@ -1,10 +1,10 @@
-# React Native KLine View
+# Native KLine View
 
 <div align="center">
-  <img src="./example/logo.png" alt="React Native KLine View" width="120" height="120" style="border-radius: 60px;" />
+  <img src="./examples/react-native/logo.png" alt="React Native KLine View" width="120" height="120" style="border-radius: 60px;" />
 </div>
 
-**Professional K-Line (Candlestick) Chart Library for React Native**
+**Professional K-Line (Candlestick) Chart Library for React Native, Native iOS/Android, and Flutter**
   
 *Ultra-smooth rendering • Interactive drawing tools • Multiple technical indicators • Dark/Light themes*
   
@@ -13,7 +13,7 @@ English | [中文文档](./README.cn.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Platform](https://img.shields.io/badge/platform-ios%20%7C%20android-lightgrey)](https://reactnative.dev)
 
-React Native KLine View is a high-performance, feature-rich candlestick chart component designed for professional trading applications. Built with native optimization for both iOS and Android, it delivers smooth 60fps scrolling, zooming, and real-time data updates.
+Native KLine View is a high-performance, feature-rich candlestick chart component designed for professional trading applications. Built with native optimization for both iOS and Android, it delivers smooth 60fps scrolling, zooming, and real-time data updates.
 
 Perfect for cryptocurrency exchanges, stock trading apps, financial dashboards, and any application requiring professional-grade market data visualization.
 
@@ -21,7 +21,7 @@ Perfect for cryptocurrency exchanges, stock trading apps, financial dashboards, 
 
 ### 📈 **Advanced Charting**
 - ✅ **Ultra-smooth scrolling** with native performance optimization
-- ✅ **Pinch-to-zoom** with fluid gesture recognition  
+- ✅ **Pinch-to-zoom** with fluid gesture recognition
 - ✅ **Long-press details** with animated info panels
 - ✅ **Real-time updates** with efficient data management
 - ✅ **Multiple timeframes** (1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w)
@@ -57,39 +57,143 @@ Perfect for cryptocurrency exchanges, stock trading apps, financial dashboards, 
 ## 🚀 Performance Demo
 
 <div align="center">
-  <img src="./example/1.png" alt="Performance Demo" width="300" />
-  <img src="./example/2.png" alt="Performance Demo" width="300" style="margin-left: 50px;" />
-  <img src="./example/3.png" alt="Performance Demo" width="800" />
-  <img src="./example/4.gif" alt="Performance Demo" width="800" />
+  <img src="./examples/react-native/1.png" alt="Performance Demo" width="300" />
+  <img src="./examples/react-native/2.png" alt="Performance Demo" width="300" style="margin-left: 50px;" />
+  <img src="./examples/react-native/3.png" alt="Performance Demo" width="800" />
+  <img src="./examples/react-native/4.gif" alt="Performance Demo" width="800" />
   
   *Smooth scrolling, zooming, and drawing operations at 60fps*
 </div>
 
 ## 📦 Installation
 
-```bash
+### React Native (Git)
 
-# For development version
-yarn add react-native-kline-view@https://github.com/hellohublot/react-native-kline-view.git
+```bash
+yarn add native-kline-view@https://github.com/hellohublot/native-kline-view.git
 ```
 
-### iOS Setup
+iOS:
 ```bash
 cd ios && pod install
 ```
 
-### Android Setup
-No additional setup required for Android.
+Android:
+No additional setup required.
+
+### Flutter (Git)
+
+```yaml
+dependencies:
+  native_kline_view:
+    git:
+      url: https://github.com/hellohublot/native-kline-view.git
+      path: flutter/native_kline_view
+```
+
+iOS:
+```bash
+cd ios && pod install
+```
+
+Note: The Flutter plugin depends on the native pod. In your Flutter app Podfile, add:
+```ruby
+pod 'NativeKLineView', :path => '../../../ios'
+```
+
+```dart
+NativeKLineView(
+  optionList: optionListJson,
+  onDrawItemDidTouch: (payload) {},
+  onDrawItemComplete: () {},
+  onDrawPointComplete: (count) {},
+)
+```
+
+### Native iOS
+
+Podfile via Git:
+```ruby
+pod 'NativeKLineView',
+  :git => 'https://github.com/hellohublot/native-kline-view.git',
+  :tag => '1.0.0',
+  :podspec => 'ios/NativeKLineView.podspec'
+```
+
+Or use a local clone:
+```ruby
+pod 'NativeKLineView', :path => '../native-kline-view/ios'
+```
+
+### Native Android
+
+Recommended: add as a git submodule (or clone) and point Gradle to the module.
+
+```bash
+git submodule add https://github.com/hellohublot/native-kline-view.git
+```
+
+```gradle
+// settings.gradle
+include(":native-kline-view")
+project(":native-kline-view").projectDir = new File(rootDir, "../native-kline-view/android")
+```
+
+```gradle
+// app/build.gradle
+implementation project(":native-kline-view")
+```
+
+XML usage:
+
+```xml
+<com.github.fujianlian.klinechart.NativeKLineView
+    android:id="@+id/klineView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+```
+
+## ▶️ Examples
+
+All examples use the local workspace library code (so you can modify and run quickly), while the install instructions above point to the remote repo.
+
+React Native:
+- App entry: [examples/react-native/App.js](./examples/react-native/App.js)
+
+Native iOS:
+```bash
+cd examples/ios
+pod install
+open NativeKLineExample.xcworkspace
+```
+
+Native Android:
+```bash
+cd examples/android
+./gradlew installDebug
+```
+
+Flutter (iOS):
+```bash
+cd examples/flutter
+flutter pub get
+flutter run -d ios
+```
+
+Flutter (Android):
+```bash
+cd examples/flutter
+flutter pub get
+flutter run -d android
+```
 
 ## 🎯 Quick Start
 
-### Basic Usage
-
-For a comprehensive implementation with all features, please check **[example/App.js](./example/App.js)**
+For a comprehensive implementation with all features, please check **[example/App.js](./examples/react-native/App.js)**
 
 The example app demonstrates:
 - 🎛️ **Complete UI Controls** - Time period selector, indicator switcher, drawing tools
-- 🎨 **Theme Management** - Dark/Light mode with smooth transitions  
+- 🎨 **Theme Management** - Dark/Light mode with smooth transitions
 - 📊 **Indicator Management** - Dynamic indicator switching and configuration
 - ✏️ **Drawing Tools** - Full-featured drawing interface with tool selection
 - 📱 **Responsive Design** - Adapts to different screen sizes and orientations
@@ -142,7 +246,7 @@ Each data point should contain the following fields:
 - `maVolumeList`: Volume moving average data
 - Various technical indicator data (MACD, KDJ, RSI, etc.)
 
-**For complete data structure examples, see [example/App.js](./example/App.js)**
+**For complete data structure examples, see [example/App.js](./examples/react-native/App.js)**
 
 ### Visual Configuration (configList)
 
@@ -196,7 +300,7 @@ Contains parameter settings for various technical indicators:
 
 **MACD Parameters**:
 - `macdS`: Fast EMA period (default "12")
-- `macdL`: Slow EMA period (default "26") 
+- `macdL`: Slow EMA period (default "26")
 - `macdM`: Signal line period (default "9")
 
 **KDJ Parameters**:
@@ -208,7 +312,7 @@ Contains parameter settings for various technical indicators:
 - `rsiList`: RSI configuration array
 - `wrList`: WR configuration array
 
-**For complete configuration examples, see [example/App.js](./example/App.js)**
+**For complete configuration examples, see [example/App.js](./examples/react-native/App.js)**
 
 ## 📄 License
 
@@ -216,36 +320,13 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICE
 
 ## 🙏 Acknowledgments
 
-This project is a significant evolution and enhancement of the original [KChartView](https://github.com/tifezh/KChartView) by [@tifezh](https://github.com/tifezh). While inspired by the original Android-only library, this React Native implementation has been completely rewritten and includes numerous additional features:
-
-### Major Enhancements Over Original
-- ✅ **Cross-platform support** - iOS and Android
-- ✅ **React Native integration** - Native bridge implementation
-- ✅ **Interactive drawing tools** - Complete drawing system with multiple tools
-- ✅ **Advanced theming** - Dark/Light mode with smooth transitions
-- ✅ **Enhanced performance** - Optimized for 60fps scrolling and zooming
-- ✅ **Modern UI components** - Modal selectors and responsive design
-- ✅ **TypeScript support** - Full type definitions
-- ✅ **Multiple timeframes** - Comprehensive time period support
-- ✅ **Gesture enhancements** - Advanced touch handling and drawing interactions
-- ✅ **Real-time updates** - Efficient data streaming and updates
-- ✅ **Professional indicators** - Extended technical analysis capabilities
-
-The codebase has been entirely rewritten to:
-- Adapt to React Native's architecture and bridge system
-- Implement iOS support using Swift and Objective-C
-- Add comprehensive drawing functionality not present in the original
-- Provide a modern, professional trading interface
-- Optimize performance for mobile devices
-- Support both React Native's old and new architectures
-
-While we honor the inspiration from the original project, this implementation represents a complete reimagining optimized for modern React Native applications and professional trading interfaces.
+This project is a significant evolution and enhancement of the original [KChartView](https://github.com/tifezh/KChartView) by [@tifezh](https://github.com/tifezh). While inspired by the original Android-only library, this React Native implementation has been completely rewritten and includes numerous additional features.
 
 ## 📞 Support
 
 - 📧 **Email**: hellohublot@gmail.com
 - 💬 **Issues**: [GitHub Issues](https://github.com/hellohublot/react-native-kline-view/issues)
-- 🎯 **Examples**: Check out [example/App.js](./example/App.js) for comprehensive usage
+- 🎯 **Examples**: Check out [example/App.js](./examples/react-native/App.js) for comprehensive usage
 
 ---
 
@@ -254,7 +335,7 @@ While we honor the inspiration from the original project, this implementation re
   <p>
     <a href="#-features">Features</a> •
     <a href="#-installation">Installation</a> •
-    <a href="#-quick-start">Quick Start</a> •
+    <a href="#%EF%B8%8F-examples">Examples</a> •
     <a href="#-component-properties">API</a> •
     <a href="#-license">License</a>
   </p>

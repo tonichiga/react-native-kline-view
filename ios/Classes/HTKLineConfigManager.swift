@@ -287,11 +287,11 @@ class HTKLineConfigManager: NSObject {
 
     static func packColorList(_ value: Any?) -> [UIColor] {
         var colorList = [UIColor]()
-        guard let itemList = value as? [Int] else {
+        guard let itemList = value as? [Any] else {
             return colorList
         }
         for item in itemList {
-            if let color = RCTConvert.uiColor(item) {
+            if let color = HTColorConvert.uiColorOptional(item) {
                 colorList.append(color)
             }
         }
@@ -341,8 +341,8 @@ class HTKLineConfigManager: NSObject {
 
         if let drawList = optionList["drawList"] as? [String: Any] {
             self.shouldScrollToEnd = false
-            if let shotBackgroundColorValue = drawList["shotBackgroundColor"] as? Int {
-                self.shotBackgroundColor = RCTConvert.uiColor(shotBackgroundColorValue)
+            if let shotBackgroundColorValue = drawList["shotBackgroundColor"] {
+                self.shotBackgroundColor = HTColorConvert.uiColor(shotBackgroundColorValue, fallback: self.shotBackgroundColor)
             }
             if let drawTypeValue = drawList["drawType"] as? Int, let drawType = HTDrawType.init(rawValue: drawTypeValue) {
                 self.drawType = drawType
@@ -356,8 +356,8 @@ class HTKLineConfigManager: NSObject {
             if let shouldClearDraw = drawList["shouldClearDraw"] as? Bool {
                 self.shouldClearDraw = shouldClearDraw
             }
-            if let drawColorValue = drawList["drawColor"] as? Int, let drawColor = RCTConvert.uiColor(drawColorValue) {
-                self.drawColor = drawColor
+            if let drawColorValue = drawList["drawColor"] {
+                self.drawColor = HTColorConvert.uiColor(drawColorValue, fallback: self.drawColor)
             }
             if let drawLineHeight = drawList["drawLineHeight"] as? CGFloat {
                 self.drawLineHeight = drawLineHeight
@@ -410,33 +410,33 @@ class HTKLineConfigManager: NSObject {
         volumeFlex = configList["volumeFlex"] as? CGFloat ?? 0
 
         let colorList = configList["colorList"] as? [String: Any] ?? [String: Any]()
-        increaseColor = RCTConvert.uiColor(colorList["increaseColor"])
-        decreaseColor = RCTConvert.uiColor(colorList["decreaseColor"])
-        minuteLineColor = RCTConvert.uiColor(configList["minuteLineColor"])
+        increaseColor = HTColorConvert.uiColor(colorList["increaseColor"], fallback: increaseColor)
+        decreaseColor = HTColorConvert.uiColor(colorList["decreaseColor"], fallback: decreaseColor)
+        minuteLineColor = HTColorConvert.uiColor(configList["minuteLineColor"], fallback: minuteLineColor)
         targetColorList = type(of: self).packColorList(configList["targetColorList"])
         minuteGradientColorList = type(of: self).packColorList(configList["minuteGradientColorList"])
         minuteGradientLocationList = configList["minuteGradientLocationList"] as? [CGFloat] ?? [CGFloat]()
-        minuteVolumeCandleColor = RCTConvert.uiColor(configList["minuteVolumeCandleColor"])
+        minuteVolumeCandleColor = HTColorConvert.uiColor(configList["minuteVolumeCandleColor"], fallback: minuteVolumeCandleColor)
         fontFamily = configList["fontFamily"] as? String ?? ""
-        textColor = RCTConvert.uiColor(configList["textColor"])
+        textColor = HTColorConvert.uiColor(configList["textColor"], fallback: textColor)
         headerTextFontSize = configList["headerTextFontSize"] as? CGFloat ?? 0
         rightTextFontSize = configList["rightTextFontSize"] as? CGFloat ?? 0
         candleTextFontSize = configList["candleTextFontSize"] as? CGFloat ?? 0
-        candleTextColor = RCTConvert.uiColor(configList["candleTextColor"])
+        candleTextColor = HTColorConvert.uiColor(configList["candleTextColor"], fallback: candleTextColor)
         panelGradientColorList = type(of: self).packColorList(configList["panelGradientColorList"])
         panelGradientLocationList = configList["panelGradientLocationList"] as? [CGFloat] ?? [CGFloat]()
-        panelBackgroundColor = RCTConvert.uiColor(configList["panelBackgroundColor"])
-        panelBorderColor = RCTConvert.uiColor(configList["panelBorderColor"])
-        selectedPointContainerColor = RCTConvert.uiColor(configList["selectedPointContainerColor"])
-        selectedPointContentColor = RCTConvert.uiColor(configList["selectedPointContentColor"])
+        panelBackgroundColor = HTColorConvert.uiColor(configList["panelBackgroundColor"], fallback: panelBackgroundColor)
+        panelBorderColor = HTColorConvert.uiColor(configList["panelBorderColor"], fallback: panelBorderColor)
+        selectedPointContainerColor = HTColorConvert.uiColor(configList["selectedPointContainerColor"], fallback: selectedPointContainerColor)
+        selectedPointContentColor = HTColorConvert.uiColor(configList["selectedPointContentColor"], fallback: selectedPointContentColor)
         panelMinWidth = configList["panelMinWidth"] as? CGFloat ?? 0
         panelTextFontSize = configList["panelTextFontSize"] as? CGFloat ?? 0
-        closePriceCenterSeparatorColor = RCTConvert.uiColor(configList["closePriceCenterSeparatorColor"])
-        closePriceCenterBackgroundColor = RCTConvert.uiColor(configList["closePriceCenterBackgroundColor"])
-        closePriceCenterBorderColor = RCTConvert.uiColor(configList["closePriceCenterBorderColor"])
-        closePriceCenterTriangleColor = RCTConvert.uiColor(configList["closePriceCenterTriangleColor"])
-        closePriceRightSeparatorColor = RCTConvert.uiColor(configList["closePriceRightSeparatorColor"])
-        closePriceRightBackgroundColor = RCTConvert.uiColor(configList["closePriceRightBackgroundColor"])
+        closePriceCenterSeparatorColor = HTColorConvert.uiColor(configList["closePriceCenterSeparatorColor"], fallback: closePriceCenterSeparatorColor)
+        closePriceCenterBackgroundColor = HTColorConvert.uiColor(configList["closePriceCenterBackgroundColor"], fallback: closePriceCenterBackgroundColor)
+        closePriceCenterBorderColor = HTColorConvert.uiColor(configList["closePriceCenterBorderColor"], fallback: closePriceCenterBorderColor)
+        closePriceCenterTriangleColor = HTColorConvert.uiColor(configList["closePriceCenterTriangleColor"], fallback: closePriceCenterTriangleColor)
+        closePriceRightSeparatorColor = HTColorConvert.uiColor(configList["closePriceRightSeparatorColor"], fallback: closePriceRightSeparatorColor)
+        closePriceRightBackgroundColor = HTColorConvert.uiColor(configList["closePriceRightBackgroundColor"], fallback: closePriceRightBackgroundColor)
         closePriceRightLightLottieFloder = configList["closePriceRightLightLottieFloder"] as? String ?? ""
         closePriceRightLightLottieScale = configList["closePriceRightLightLottieScale"] as? CGFloat ?? 0
         closePriceRightLightLottieSource = configList["closePriceRightLightLottieSource"] as? String ?? ""
