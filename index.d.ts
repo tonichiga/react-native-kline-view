@@ -1,3 +1,4 @@
+import type React from "react";
 import type {
   HostComponent,
   NativeSyntheticEvent,
@@ -172,6 +173,9 @@ export interface RNKLineViewProps extends ViewProps {
 
 export type RNKLineViewComponent = HostComponent<RNKLineViewProps>;
 
-declare const RNKLineView: (props: RNKLineViewProps) => ReactNode;
+declare const RNKLineView: React.ForwardRefExoticComponent<
+  RNKLineViewProps &
+    React.RefAttributes<React.ComponentRef<RNKLineViewComponent>>
+>;
 
 export default RNKLineView;

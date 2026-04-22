@@ -3,7 +3,10 @@ import { View, StyleSheet, requireNativeComponent } from "react-native";
 
 const RNKLineViewNative = requireNativeComponent("RNKLineView");
 
-function RNKLineView({ tradeComponent, style, ...props }) {
+const RNKLineView = React.forwardRef(function RNKLineView(
+  { tradeComponent, style, ...props },
+  ref,
+) {
   const [markers, setMarkers] = useState([]);
 
   const onTradeMarkersLayout = useCallback((event) => {
@@ -13,6 +16,7 @@ function RNKLineView({ tradeComponent, style, ...props }) {
   return (
     <View style={style}>
       <RNKLineViewNative
+        ref={ref}
         {...props}
         style={StyleSheet.absoluteFill}
         useCustomTradeMarker={!!tradeComponent}
@@ -42,6 +46,6 @@ function RNKLineView({ tradeComponent, style, ...props }) {
         })}
     </View>
   );
-}
+});
 
 export default RNKLineView;
