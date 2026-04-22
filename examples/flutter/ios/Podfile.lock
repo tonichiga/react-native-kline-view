@@ -1,0 +1,36 @@
+PODS:
+  - Flutter (1.0.0)
+  - lottie-ios (4.5.2)
+  - native_kline_view (0.0.1):
+    - Flutter
+    - lottie-ios (~> 4.5.0)
+    - NativeKLineView
+  - NativeKLineView (1.0.0):
+    - lottie-ios (~> 4.5.0)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - native_kline_view (from `.symlinks/plugins/native_kline_view/ios`)
+  - NativeKLineView (from `../../../ios`)
+
+SPEC REPOS:
+  trunk:
+    - lottie-ios
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  native_kline_view:
+    :path: ".symlinks/plugins/native_kline_view/ios"
+  NativeKLineView:
+    :path: "../../../ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  lottie-ios: 96784afc26ea031d3e2b6cae342a4b8915072489
+  native_kline_view: 36280e4a50f398d447cef370b154ad0ac833136f
+  NativeKLineView: ef0b3179e152ea818a99200333b4d0981aa4941b
+
+PODFILE CHECKSUM: 9674640f6f6347a622348d222dcb649060da2225
+
+COCOAPODS: 1.15.2

@@ -1,10 +1,10 @@
-# React Native K线图表库
+# Native KLine View
 
 <div align="center">
-  <img src="./example/logo.png" alt="React Native KLine View" width="120" height="120" style="border-radius: 60px;" />
+  <img src="./examples/react-native/logo.png" alt="React Native KLine View" width="120" height="120" style="border-radius: 60px;" />
 </div>
 
-**专业的React Native K线（蜡烛图）图表库**
+**专业的 React Native / 原生 iOS & Android / Flutter K 线（蜡烛图）图表库**
 
 _超流畅渲染 • 交互式绘图工具 • 多种技术指标 • 深色/浅色主题_
 
@@ -13,86 +13,174 @@ _超流畅渲染 • 交互式绘图工具 • 多种技术指标 • 深色/浅
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Platform](https://img.shields.io/badge/platform-ios%20%7C%20android-lightgrey)](https://reactnative.dev)
 
-React Native KLine View 是一个高性能、功能丰富的蜡烛图表组件，专为专业交易应用而设计。通过iOS和Android双平台的原生优化，提供流畅的60fps滚动、缩放和实时数据更新。
-适用于加密货币交易所、股票交易应用、金融仪表板以及任何需要专业级市场数据可视化的应用。
+Native KLine View 是一个高性能、功能丰富的蜡烛图组件，专为专业交易类应用打造。基于 iOS 和 Android 原生实现，提供流畅的 60fps 滚动、缩放以及实时数据更新体验。
+
+适用于加密货币交易所、股票交易应用、金融分析工具以及任何需要专业级行情展示的场景。
+
+---
 
 ## 🌟 功能特性
 
-### 📈 **高级图表功能**
+### 📈 高级图表能力
 
-- ✅ **超流畅滚动** - 原生性能优化，60fps丝滑体验
-- ✅ **手势缩放** - 流畅的双指缩放识别
-- ✅ **长按详情** - 动画信息面板显示详细数据
-- ✅ **实时更新** - 高效数据管理和更新机制
-- ✅ **多时间周期** (1分钟、5分钟、15分钟、30分钟、1小时、4小时、1天、1周)
-- ✅ **自定义成交标记** - 支持使用 React 组件渲染买卖点（`buy`/`sell`、数量、价格）
+- 超流畅滚动（原生性能优化，接近 60fps）
+- 双指缩放（流畅手势识别）
+- 长按查看详情（带动画信息面板）
+- 实时数据更新（高效数据处理）
+- 多时间周期支持（1m / 5m / 15m / 30m / 1h / 4h / 1d / 1w）
 
-### 📊 **技术分析指标**
+---
 
-- ✅ **主图指标**: MA（移动平均线）、BOLL（布林带）
-- ✅ **副图指标**: MACD、KDJ、RSI、WR
-- ✅ **自定义参数** - 所有指标支持参数调整
-- ✅ **多彩指标线** - 平滑动画效果
-- ✅ **成交量分析** - 专用成交量图表显示
+### 📊 技术指标
 
-### ✏️ **交互式绘图工具**
+- 主图指标：MA（均线）、BOLL（布林带）
+- 副图指标：MACD、KDJ、RSI、WR
+- 支持自定义参数
+- 多彩指标线 + 平滑动画
+- 成交量分析图
 
-- ✅ **趋势线** - 对角线支撑阻力分析
-- ✅ **水平线** - 价格水平标记
-- ✅ **垂直线** - 时间事件标记
-- ✅ **矩形** - 范围高亮显示
-- ✅ **文本标注** - 自定义标签和注释
-- ✅ **绘图持久化** - 触摸编辑功能
+---
 
-### 🎨 **视觉效果**
+### ✏️ 绘图工具
 
-- ✅ **深色/浅色主题** - 即时切换，无缝过渡
-- ✅ **渐变背景** - 增强视觉吸引力
-- ✅ **自定义颜色** - 所有图表元素完全可定制
-- ✅ **响应式设计** - 支持横竖屏自动适配
-- ✅ **高DPI支持** - 所有设备清晰渲染
+- 趋势线（支撑/阻力分析）
+- 水平线（价格标记）
+- 垂直线（时间标记）
+- 矩形（区间标注）
+- 文本标注
+- 支持编辑与持久化
 
-### 📱 **平台支持**
+---
 
-- ✅ **iOS & Android** - 平台特定优化
-- ✅ **React Native 新架构** 兼容
-- ✅ **Fabric 渲染器** 支持，增强性能
-- ✅ **TypeScript** 类型定义包含
+### 🎨 视觉效果
+
+- 深色 / 浅色主题切换
+- 渐变背景
+- 全量自定义颜色
+- 响应式布局（横竖屏）
+- 高 DPI 渲染支持
+
+---
+
+### 📱 平台支持
+
+- iOS & Android（原生实现）
+- React Native 新架构支持（Fabric）
+- Flutter 支持
+- TypeScript 类型定义
+
+---
 
 ## 🚀 性能演示
 
 <div align="center">
-  <img src="./example/1.png" alt="Performance Demo" width="300"  />
-  <img src="./example/2.png" alt="Performance Demo" width="300" style="margin-left: 50px;"  />
-  <img src="./example/3.png" alt="Performance Demo" width="800" />
-  <img src="./example/4.gif" alt="Performance Demo" width="800" />
-  
-  *60fps 流畅滚动、缩放和绘图操作*
+  <img src="./examples/react-native/1.png" width="300" />
+  <img src="./examples/react-native/2.png" width="300" style="margin-left: 50px;" />
+  <img src="./examples/react-native/3.png" width="800" />
+  <img src="./examples/react-native/4.gif" width="800" />
 </div>
+
+---
 
 ## 📦 安装
 
-```bash
+### React Native（Git）
 
-# 开发版本
-yarn add react-native-kline-view@https://github.com/hellohublot/react-native-kline-view.git
+```bash
+yarn add native-kline-view@https://github.com/hellohublot/native-kline-view.git
 ```
 
-### iOS 配置
+### React Native iOS 配置
 
 ```bash
 cd ios && pod install
 ```
 
-### Android 配置
+### React Native Android 配置
 
 Android 无需额外配置。
+
+## 🧩 Flutter（Git）
+
+```yaml
+dependencies:
+  native_kline_view:
+    git:
+      url: https://github.com/hellohublot/native-kline-view.git
+      path: flutter/native_kline_view
+```
+
+iOS:
+说明：Flutter 插件依赖原生 Pod，请在你的 Flutter Podfile 里二选一：
+
+本地路径（推荐，用于本仓库）：
+
+```ruby
+pod 'NativeKLineView', :path => '../../../ios'
+```
+
+或远程 podspec（无需本地 clone）：
+
+```ruby
+pod 'NativeKLineView', :podspec => 'https://raw.githubusercontent.com/hellohublot/native-kline-view/main/ios/NativeKLineView.podspec'
+```
+
+```dart
+NativeKLineView(
+  optionList: optionListJson,
+  onDrawItemDidTouch: (payload) {},
+  onDrawItemComplete: () {},
+  onDrawPointComplete: (count) {},
+)
+```
+
+## 🔌 原生 iOS
+
+Podfile via Git:
+
+```ruby
+pod 'NativeKLineView', :podspec => 'https://raw.githubusercontent.com/hellohublot/native-kline-view/main/ios/NativeKLineView.podspec'
+```
+
+或使用本地 clone：
+
+```ruby
+pod 'NativeKLineView', :path => '../native-kline-view/ios'
+```
+
+## 🔌 原生 Android（无需 Maven 账号）
+
+推荐：git submodule 或 clone 后，以 Gradle project 方式引用。
+
+```bash
+git submodule add https://github.com/hellohublot/native-kline-view.git
+```
+
+```gradle
+// settings.gradle
+include(":native-kline-view")
+project(":native-kline-view").projectDir = new File(rootDir, "../native-kline-view/android")
+```
+
+```gradle
+// app/build.gradle
+implementation project(":native-kline-view")
+```
+
+XML 使用方式：
+
+```xml
+<com.github.fujianlian.klinechart.NativeKLineView
+    android:id="@+id/klineView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+```
 
 ## 🎯 快速开始
 
 ### 基础用法
 
-查看完整的实现示例，请参考 **[example/App.js](./example/App.js)**
+查看完整的实现示例，请参考 **[example/App.js](./examples/react-native/App.js)**
 
 示例应用展示了：
 
@@ -264,7 +352,7 @@ export default function Chart() {
 - `rsiList`: RSI配置数组
 - `wrList`: WR配置数组
 
-**查看完整配置示例，请参考 [example/App.js](./example/App.js)**
+**查看完整配置示例，请参考 [example/App.js](./examples/react-native/App.js)**
 
 ## 📄 许可证
 
@@ -303,7 +391,7 @@ export default function Chart() {
 
 - 📧 **邮箱**: hellohublot@gmail.com
 - 💬 **问题**: [GitHub Issues](https://github.com/hellohublot/react-native-kline-view/issues)
-- 🎯 **示例**: 查看 [example/App.js](./example/App.js) 获取全面的使用方法
+- 🎯 **示例**: 查看 [example/App.js](./examples/react-native/App.js) 获取全面的使用方法
 
 ---
 

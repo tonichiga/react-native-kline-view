@@ -5,10 +5,15 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import com.facebook.react.bridge.*;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.github.fujianlian.klinechart.HTKLineConfigManager;
+import com.github.fujianlian.klinechart.HTKLineCallback;
 import com.github.fujianlian.klinechart.KLineChartView;
 import com.github.fujianlian.klinechart.RNKLineView;
 import com.github.fujianlian.klinechart.formatter.DateFormatter;
@@ -96,7 +101,7 @@ public class HTKLineContainerView extends RelativeLayout {
 
 
         final int id = this.getId();
-        configManager.onDrawItemDidTouch = new Callback() {
+        configManager.onDrawItemDidTouch = new HTKLineCallback() {
             @Override
             public void invoke(Object... args) {
                 HTDrawItem drawItem = (HTDrawItem) args[0];
@@ -131,7 +136,7 @@ public class HTKLineContainerView extends RelativeLayout {
                 );
             }
         };
-        configManager.onDrawItemComplete = new Callback() {
+        configManager.onDrawItemComplete = new HTKLineCallback() {
             @Override
             public void invoke(Object... args) {
                 reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
@@ -141,7 +146,7 @@ public class HTKLineContainerView extends RelativeLayout {
                 );
             }
         };
-        configManager.onDrawPointComplete = new Callback() {
+        configManager.onDrawPointComplete = new HTKLineCallback() {
             @Override
             public void invoke(Object... args) {
                 HTDrawItem drawItem = (HTDrawItem) args[0];

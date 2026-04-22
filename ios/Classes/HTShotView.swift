@@ -7,6 +7,10 @@
 
 import UIKit
 
+#if canImport(React)
+import React
+#endif
+
 class HTShotView: UIView {
         
     var shotView: UIView?
@@ -45,11 +49,18 @@ class HTShotView: UIView {
         imageView.layer.masksToBounds = true
         isUserInteractionEnabled = false
     }
-    
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imageView.frame = bounds
+    }
+
+#if canImport(React)
     override func reactSetFrame(_ frame: CGRect) {
         super.reactSetFrame(frame)
         imageView.frame = bounds
     }
+#endif
     
     func reloadImage() -> Void {
         guard let shotView = shotView, let shotPoint = shotPoint else {

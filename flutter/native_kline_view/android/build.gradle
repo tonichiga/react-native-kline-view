@@ -1,0 +1,48 @@
+group 'com.github.fujianlian.native_kline_view'
+version '0.0.1'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace "com.github.fujianlian.klinechart"
+    compileSdk 35
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 35
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [
+                "src/main/java",
+                "../../../android/src/main/java"
+            ]
+            java.exclude(
+                "**/RNKLineView.java",
+                "**/RNKLineViewPackage.java",
+                "**/container/HTKLineContainerView.java"
+            )
+            res.srcDirs = [
+                "src/main/res",
+                "../../../android/src/main/res"
+            ]
+            manifest.srcFile "src/main/AndroidManifest.xml"
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.airbnb.android:lottie:3.0.7'
+    implementation 'com.alibaba:fastjson:1.2.60'
+}

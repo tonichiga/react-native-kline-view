@@ -1,0 +1,43 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdk 35
+    namespace "com.github.fujianlian.klinechart"
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ["../src/main/java"]
+                exclude "**/RNKLineView.java"
+                exclude "**/RNKLineViewPackage.java"
+                exclude "**/container/HTKLineContainerView.java"
+            }
+            res.srcDirs = ["../src/main/res"]
+            manifest.srcFile "../src/main/AndroidManifest.xml"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.airbnb.android:lottie:3.0.7'
+    implementation 'com.alibaba:fastjson:1.2.60'
+}
