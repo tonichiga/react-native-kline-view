@@ -261,6 +261,10 @@ class HTKLineConfigManager: NSObject {
     var onDrawItemComplete: HTKLineDrawItemBlock?
     
     var onDrawPointComplete: HTKLineDrawItemBlock?
+
+    var useCustomTradeMarker: Bool = false
+
+    var onTradeMarkersLayout: (([[String: Any]]) -> Void)?
     
     // -3 表示没有弹起任何弹窗, -2 表示弹起了画笔弹窗没有弹起 context 弹窗, -1 表示弹起了弹窗, 弹窗表示的是全局配置, 其他表示正常的 index
     var shouldReloadDrawItemIndex = -3

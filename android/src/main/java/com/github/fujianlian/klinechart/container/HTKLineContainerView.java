@@ -154,6 +154,32 @@ public class HTKLineContainerView extends RelativeLayout {
                 );
             }
         };
+        configManager.onTradeMarkersLayout = new Callback() {
+            @Override
+            public void invoke(Object... args) {
+                @SuppressWarnings("unchecked")
+                java.util.List<java.util.Map<String, Object>> markerList =
+                        (java.util.List<java.util.Map<String, Object>>) args[0];
+                WritableArray markersArray = Arguments.createArray();
+                for (java.util.Map<String, Object> marker : markerList) {
+                    WritableMap m = Arguments.createMap();
+                    m.putDouble("x", ((Number) marker.get("x")).doubleValue());
+                    m.putDouble("y", ((Number) marker.get("y")).doubleValue());
+                    m.putDouble("price", ((Number) marker.get("price")).doubleValue());
+                    m.putString("type", (String) marker.get("type"));
+                    m.putInt("count", ((Number) marker.get("count")).intValue());
+                    m.putDouble("timestamp", ((Number) marker.get("timestamp")).doubleValue());
+                    markersArray.pushMap(m);
+                }
+                WritableMap payload = Arguments.createMap();
+                payload.putArray("markers", markersArray);
+                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                        id,
+                        RNKLineView.onTradeMarkersLayoutKey,
+                        payload
+                );
+            }
+        };
 
         int reloadIndex = configManager.shouldReloadDrawItemIndex;
         if (reloadIndex >= 0 && reloadIndex < klineView.drawContext.drawItemList.size()) {

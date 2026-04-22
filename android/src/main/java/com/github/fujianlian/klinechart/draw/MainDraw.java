@@ -173,6 +173,9 @@ public class MainDraw implements IChartDraw<ICandle> {
     }
 
     private void drawTradeMarker(BaseKLineChartView view, Canvas canvas, float x, float price, float siblingPrice, int tradeCount, int siblingCount, Paint paint, boolean shouldShiftOnOverlap) {
+        if (view.configManager.useCustomTradeMarker) {
+            return;
+        }
         if (Float.isNaN(price) || Float.isInfinite(price)) {
             return;
         }

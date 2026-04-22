@@ -15,6 +15,7 @@ class HTMainDraw: NSObject, HTKLineDrawProtocol {
     }
 
     private func drawTradeMarker(_ value: CGFloat, _ siblingValue: CGFloat, _ count: Int, _ siblingCount: Int, _ index: Int, _ maxValue: CGFloat, _ minValue: CGFloat, _ baseY: CGFloat, _ height: CGFloat, _ context: CGContext, _ configManager: HTKLineConfigManager, _ color: UIColor, _ shouldShiftOnOverlap: Bool) {
+        guard !configManager.useCustomTradeMarker else { return }
         guard !value.isNaN, !value.isInfinite else {
             return
         }

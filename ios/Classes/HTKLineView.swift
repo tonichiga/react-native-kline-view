@@ -42,6 +42,8 @@ class HTKLineView: UIScrollView {
 
     var lastLoadAnimationSource = ""
 
+    private var tradeMarkersDebounce: DispatchWorkItem?
+
 
 
 
@@ -178,6 +180,9 @@ class HTKLineView: UIScrollView {
         }
 
         calculateBaseHeight()
+        if configManager.useCustomTradeMarker {
+            emitTradeMarkersDebounced()
+        }
         contextTranslate(context, CGFloat(visibleRange.lowerBound) * configManager.itemWidth, { context in
             drawCandle(context)
         })
@@ -611,6 +616,40 @@ class HTKLineView: UIScrollView {
 
     func viewPointFromValuePoint(_ point: CGPoint) -> CGPoint {
         return CGPoint.init(x: xFromValue(point.x), y: yFromValue(point.y))
+    }
+
+    private func computeTradeMarkerPositions() -> [[String: Any]] {
+        guard configManager.useCustomTradeMarker, mainHeight > 0 else { return [] }
+        let maxValue = mainMinMaxRange.upperBound
+        let minValue = mainMinMaxRange.lowerBound
+        let scale = (maxValue - minValue) / mainHeight
+        guard scale != 0 else { return [] }
+
+        var markers: [[String: Any]] = []
+        let paddingHorizontal = (configManager.itemWidth - configManager.lineWidth) / 2
+        for (i, model) in visibleModelArray.enumerated() {
+            let absoluteIndex = visibleRange.lowerBound + i
+            let cx = CGFloat(absoluteIndex) * configManager.itemWidth + paddingHorizontal - contentOffset.x
+            if !model.openTradePrice.isNaN, !model.openTradePrice.isInfinite, model.openTradeCount > 0 {
+                let y = mainBaseY + (maxValue - model.openTradePrice) / scale
+                markers.append(["x": cx, "y": y, "price": model.openTradePrice, "type": "buy", "count": model.openTradeCount, "timestamp": model.id])
+            }
+            if !model.closeTradePrice.isNaN, !model.closeTradePrice.isInfinite, model.closeTradeCount > 0 {
+                let y = mainBaseY + (maxValue - model.closeTradePrice) / scale
+                markers.append(["x": cx, "y": y, "price": model.closeTradePrice, "type": "sell", "count": model.closeTradeCount, "timestamp": model.id])
+            }
+        }
+        return markers
+    }
+
+    private func emitTradeMarkersDebounced() {
+        tradeMarkersDebounce?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            self.configManager.onTradeMarkersLayout?(self.computeTradeMarkerPositions())
+        }
+        tradeMarkersDebounce = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: work)
     }
     
 

@@ -1,6 +1,7 @@
 import type {
   HostComponent,
   NativeSyntheticEvent,
+  ReactNode,
   ViewProps,
 } from "react-native";
 
@@ -148,8 +149,16 @@ export interface RNKLineOptionList {
 
 export type RNKLineOptionListSerialized = string;
 
+export interface TTrade {
+  id: string;
+  timestamp: number;
+  price: number;
+  type: "sell" | "buy";
+}
+
 export interface RNKLineViewProps extends ViewProps {
   optionList?: RNKLineOptionListSerialized | null;
+  tradeComponent?: (trade: TTrade, count: number) => ReactNode;
   onDrawItemDidTouch?: (
     event: NativeSyntheticEvent<RNKLineDrawItemDidTouchPayload>,
   ) => void;
@@ -163,6 +172,6 @@ export interface RNKLineViewProps extends ViewProps {
 
 export type RNKLineViewComponent = HostComponent<RNKLineViewProps>;
 
-declare const RNKLineView: RNKLineViewComponent;
+declare const RNKLineView: (props: RNKLineViewProps) => ReactNode;
 
 export default RNKLineView;

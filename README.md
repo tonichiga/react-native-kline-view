@@ -5,9 +5,9 @@
 </div>
 
 **Professional K-Line (Candlestick) Chart Library for React Native**
-  
-*Ultra-smooth rendering • Interactive drawing tools • Multiple technical indicators • Dark/Light themes*
-  
+
+_Ultra-smooth rendering • Interactive drawing tools • Multiple technical indicators • Dark/Light themes_
+
 English | [中文文档](./README.cn.md)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
@@ -20,13 +20,16 @@ Perfect for cryptocurrency exchanges, stock trading apps, financial dashboards, 
 ## 🌟 Features
 
 ### 📈 **Advanced Charting**
+
 - ✅ **Ultra-smooth scrolling** with native performance optimization
-- ✅ **Pinch-to-zoom** with fluid gesture recognition  
+- ✅ **Pinch-to-zoom** with fluid gesture recognition
 - ✅ **Long-press details** with animated info panels
 - ✅ **Real-time updates** with efficient data management
 - ✅ **Multiple timeframes** (1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w)
+- ✅ **Custom trade markers** rendered with React components (`buy`/`sell`, count, price)
 
 ### 📊 **Technical Analysis**
+
 - ✅ **Main Chart Indicators**: MA (Moving Average), BOLL (Bollinger Bands)
 - ✅ **Sub Chart Indicators**: MACD, KDJ, RSI, WR
 - ✅ **Customizable parameters** for all indicators
@@ -34,6 +37,7 @@ Perfect for cryptocurrency exchanges, stock trading apps, financial dashboards, 
 - ✅ **Volume analysis** with dedicated volume chart
 
 ### ✏️ **Interactive Drawing Tools**
+
 - ✅ **Trend Lines** - Diagonal support/resistance analysis
 - ✅ **Horizontal Lines** - Price level marking
 - ✅ **Vertical Lines** - Time-based event marking
@@ -42,6 +46,7 @@ Perfect for cryptocurrency exchanges, stock trading apps, financial dashboards, 
 - ✅ **Drawing persistence** with touch-to-edit functionality
 
 ### 🎨 **Visual Excellence**
+
 - ✅ **Dark/Light themes** with instant switching
 - ✅ **Gradient backgrounds** for enhanced visual appeal
 - ✅ **Customizable colors** for all chart elements
@@ -49,6 +54,7 @@ Perfect for cryptocurrency exchanges, stock trading apps, financial dashboards, 
 - ✅ **High-DPI support** for crisp rendering on all devices
 
 ### 📱 **Platform Support**
+
 - ✅ **iOS & Android** with platform-specific optimizations
 - ✅ **React Native New Architecture** compatible
 - ✅ **Fabric renderer** support for enhanced performance
@@ -74,11 +80,13 @@ yarn add react-native-kline-view@https://github.com/hellohublot/react-native-kli
 ```
 
 ### iOS Setup
+
 ```bash
 cd ios && pod install
 ```
 
 ### Android Setup
+
 No additional setup required for Android.
 
 ## 🎯 Quick Start
@@ -88,30 +96,81 @@ No additional setup required for Android.
 For a comprehensive implementation with all features, please check **[example/App.js](./example/App.js)**
 
 The example app demonstrates:
+
 - 🎛️ **Complete UI Controls** - Time period selector, indicator switcher, drawing tools
-- 🎨 **Theme Management** - Dark/Light mode with smooth transitions  
+- 🎨 **Theme Management** - Dark/Light mode with smooth transitions
 - 📊 **Indicator Management** - Dynamic indicator switching and configuration
 - ✏️ **Drawing Tools** - Full-featured drawing interface with tool selection
 - 📱 **Responsive Design** - Adapts to different screen sizes and orientations
+
+## 🆕 Custom Trade Marker Component
+
+You can now render trade markers with your own React component instead of the default native dots.
+
+<div align="center">
+  <img src="./example/chart.png" alt="Custom trade marker overlay" width="720" />
+
+_Example: custom marker on top of minute chart_
+
+</div>
+
+### How it works
+
+- Pass `tradeComponent` to `RNKLineView`
+- The library emits marker positions from native iOS layout
+- Your component is rendered as an absolute overlay and does not block gestures
+
+### Usage
+
+```tsx
+import React from "react";
+import { View, Text } from "react-native";
+import RNKLineView from "react-native-kline-view";
+
+const TradeMarker = (trade: { type: "buy" | "sell" }, count: number) => (
+  <View
+    style={{
+      backgroundColor: trade.type === "buy" ? "#11c766" : "#ff5b6e",
+      borderRadius: 10,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+    }}
+  >
+    <Text style={{ color: "#fff", fontSize: 10, fontWeight: "700" }}>
+      {trade.type.toUpperCase()} {count}
+    </Text>
+  </View>
+);
+
+export default function Chart() {
+  return (
+    <RNKLineView
+      optionList={JSON.stringify(optionList)}
+      tradeComponent={TradeMarker}
+    />
+  );
+}
+```
 
 ## 📊 Component Properties
 
 ### Core Properties
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `optionList` | string | ✅ | - | JSON string containing all chart configuration and data |
-| `onDrawItemDidTouch` | function | ❌ | - | Callback when a drawing item is touched |
-| `onDrawItemComplete` | function | ❌ | - | Callback when a drawing item is completed |
-| `onDrawPointComplete` | function | ❌ | - | Callback when drawing point is completed |
+| Property              | Type                          | Required | Default | Description                                                                  |
+| --------------------- | ----------------------------- | -------- | ------- | ---------------------------------------------------------------------------- |
+| `optionList`          | string                        | ✅       | -       | JSON string containing all chart configuration and data                      |
+| `tradeComponent`      | `(trade, count) => ReactNode` | ❌       | -       | Custom renderer for trade markers (`trade = { id, timestamp, price, type }`) |
+| `onDrawItemDidTouch`  | function                      | ❌       | -       | Callback when a drawing item is touched                                      |
+| `onDrawItemComplete`  | function                      | ❌       | -       | Callback when a drawing item is completed                                    |
+| `onDrawPointComplete` | function                      | ❌       | -       | Callback when drawing point is completed                                     |
 
 ### Event Callbacks Detail
 
-| Callback | Parameters | Description |
-|----------|------------|-------------|
-| `onDrawItemDidTouch` | `{ shouldReloadDrawItemIndex, drawColor, drawLineHeight, drawDashWidth, drawDashSpace, drawIsLock }` | Triggered when user touches an existing drawing item. Returns drawing properties for editing |
-| `onDrawItemComplete` | `{}` | Triggered when user completes creating a new drawing item |
-| `onDrawPointComplete` | `{ pointCount }` | Triggered when user completes adding points to a drawing (useful for multi-point drawings) |
+| Callback              | Parameters                                                                                           | Description                                                                                  |
+| --------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `onDrawItemDidTouch`  | `{ shouldReloadDrawItemIndex, drawColor, drawLineHeight, drawDashWidth, drawDashSpace, drawIsLock }` | Triggered when user touches an existing drawing item. Returns drawing properties for editing |
+| `onDrawItemComplete`  | `{}`                                                                                                 | Triggered when user completes creating a new drawing item                                    |
+| `onDrawPointComplete` | `{ pointCount }`                                                                                     | Triggered when user completes adding points to a drawing (useful for multi-point drawings)   |
 
 ## 🔧 OptionList Configuration
 
@@ -119,17 +178,18 @@ The `optionList` is a JSON string containing all chart configuration. Here's the
 
 ### Main Configuration
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `modelArray` | Array | `[]` | K-line data array (see Data Format below) |
-| `shouldScrollToEnd` | Boolean | `true` | Whether to scroll to the latest data on load |
-| `targetList` | Object | `{}` | Technical indicator parameters |
-| `configList` | Object | `{}` | Visual styling configuration |
-| `drawList` | Object | `{}` | Drawing tools configuration |
+| Property            | Type    | Default | Description                                  |
+| ------------------- | ------- | ------- | -------------------------------------------- |
+| `modelArray`        | Array   | `[]`    | K-line data array (see Data Format below)    |
+| `shouldScrollToEnd` | Boolean | `true`  | Whether to scroll to the latest data on load |
+| `targetList`        | Object  | `{}`    | Technical indicator parameters               |
+| `configList`        | Object  | `{}`    | Visual styling configuration                 |
+| `drawList`          | Object  | `{}`    | Drawing tools configuration                  |
 
 ### Data Format (modelArray)
 
 Each data point should contain the following fields:
+
 - `id`: Timestamp
 - `open`: Opening price
 - `high`: Highest price
@@ -146,65 +206,70 @@ Each data point should contain the following fields:
 
 ### Visual Configuration (configList)
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `colorList` | Object | `{ increaseColor, decreaseColor }` - Bull/bear colors |
-| `targetColorList` | Array | Colors for indicator lines |
-| `backgroundColor` | Color | Chart background color |
-| `textColor` | Color | Global text color |
-| `gridColor` | Color | Grid line color |
-| `candleTextColor` | Color | Candle label text color |
-| `minuteLineColor` | Color | Minute chart line color |
-| `minuteGradientColorList` | Array | Gradient colors for minute chart background |
-| `minuteGradientLocationList` | Array | Gradient stop positions [0, 0.3, 0.6, 1] |
-| `mainFlex` | Number | Main chart height ratio (0.6 - 0.85) |
-| `volumeFlex` | Number | Volume chart height ratio (0.15 - 0.25) |
-| `paddingTop` | Number | Top padding in pixels |
-| `paddingBottom` | Number | Bottom padding in pixels |
-| `paddingRight` | Number | Right padding in pixels |
-| `itemWidth` | Number | Total width per candle (including margins) |
-| `candleWidth` | Number | Actual candle body width |
-| `fontFamily` | String | Font family for all text |
-| `headerTextFontSize` | Number | Header text size |
-| `rightTextFontSize` | Number | Right axis text size |
-| `candleTextFontSize` | Number | Candle value text size |
-| `panelTextFontSize` | Number | Info panel text size |
-| `panelMinWidth` | Number | Minimum info panel width |
+| Property                     | Type   | Description                                           |
+| ---------------------------- | ------ | ----------------------------------------------------- |
+| `colorList`                  | Object | `{ increaseColor, decreaseColor }` - Bull/bear colors |
+| `targetColorList`            | Array  | Colors for indicator lines                            |
+| `backgroundColor`            | Color  | Chart background color                                |
+| `textColor`                  | Color  | Global text color                                     |
+| `gridColor`                  | Color  | Grid line color                                       |
+| `candleTextColor`            | Color  | Candle label text color                               |
+| `minuteLineColor`            | Color  | Minute chart line color                               |
+| `minuteGradientColorList`    | Array  | Gradient colors for minute chart background           |
+| `minuteGradientLocationList` | Array  | Gradient stop positions [0, 0.3, 0.6, 1]              |
+| `mainFlex`                   | Number | Main chart height ratio (0.6 - 0.85)                  |
+| `volumeFlex`                 | Number | Volume chart height ratio (0.15 - 0.25)               |
+| `paddingTop`                 | Number | Top padding in pixels                                 |
+| `paddingBottom`              | Number | Bottom padding in pixels                              |
+| `paddingRight`               | Number | Right padding in pixels                               |
+| `itemWidth`                  | Number | Total width per candle (including margins)            |
+| `candleWidth`                | Number | Actual candle body width                              |
+| `fontFamily`                 | String | Font family for all text                              |
+| `headerTextFontSize`         | Number | Header text size                                      |
+| `rightTextFontSize`          | Number | Right axis text size                                  |
+| `candleTextFontSize`         | Number | Candle value text size                                |
+| `panelTextFontSize`          | Number | Info panel text size                                  |
+| `panelMinWidth`              | Number | Minimum info panel width                              |
 
 ### Drawing Configuration (drawList)
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `drawType` | Number | Current drawing tool type (0=none, 1=trend, 2=horizontal, etc.) |
-| `shouldReloadDrawItemIndex` | Number | Drawing state management |
-| `drawShouldContinue` | Boolean | Whether to continue drawing after completing one item |
-| `shouldClearDraw` | Boolean | Flag to clear all drawings |
-| `shouldFixDraw` | Boolean | Flag to finalize current drawing |
-| `shotBackgroundColor` | Color | Drawing overlay background color |
+| Property                    | Type    | Description                                                     |
+| --------------------------- | ------- | --------------------------------------------------------------- |
+| `drawType`                  | Number  | Current drawing tool type (0=none, 1=trend, 2=horizontal, etc.) |
+| `shouldReloadDrawItemIndex` | Number  | Drawing state management                                        |
+| `drawShouldContinue`        | Boolean | Whether to continue drawing after completing one item           |
+| `shouldClearDraw`           | Boolean | Flag to clear all drawings                                      |
+| `shouldFixDraw`             | Boolean | Flag to finalize current drawing                                |
+| `shotBackgroundColor`       | Color   | Drawing overlay background color                                |
 
 ### Technical Indicators (targetList)
 
 Contains parameter settings for various technical indicators:
 
 **Moving Average Settings**:
+
 - `maList`: MA line configuration array
 - `maVolumeList`: Volume MA configuration
 
 **Bollinger Bands Parameters**:
+
 - `bollN`: Period (default "20")
 - `bollP`: Standard deviation multiplier (default "2")
 
 **MACD Parameters**:
+
 - `macdS`: Fast EMA period (default "12")
-- `macdL`: Slow EMA period (default "26") 
+- `macdL`: Slow EMA period (default "26")
 - `macdM`: Signal line period (default "9")
 
 **KDJ Parameters**:
+
 - `kdjN`: Period (default "9")
 - `kdjM1`: K smoothing (default "3")
 - `kdjM2`: D smoothing (default "3")
 
 **RSI and WR Settings**:
+
 - `rsiList`: RSI configuration array
 - `wrList`: WR configuration array
 
@@ -219,6 +284,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICE
 This project is a significant evolution and enhancement of the original [KChartView](https://github.com/tifezh/KChartView) by [@tifezh](https://github.com/tifezh). While inspired by the original Android-only library, this React Native implementation has been completely rewritten and includes numerous additional features:
 
 ### Major Enhancements Over Original
+
 - ✅ **Cross-platform support** - iOS and Android
 - ✅ **React Native integration** - Native bridge implementation
 - ✅ **Interactive drawing tools** - Complete drawing system with multiple tools
@@ -232,6 +298,7 @@ This project is a significant evolution and enhancement of the original [KChartV
 - ✅ **Professional indicators** - Extended technical analysis capabilities
 
 The codebase has been entirely rewritten to:
+
 - Adapt to React Native's architecture and bridge system
 - Implement iOS support using Swift and Objective-C
 - Add comprehensive drawing functionality not present in the original

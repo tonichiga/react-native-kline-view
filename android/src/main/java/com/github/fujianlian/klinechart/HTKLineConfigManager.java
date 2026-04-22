@@ -61,6 +61,10 @@ public class HTKLineConfigManager {
 
     public Callback onDrawPointComplete;
 
+    public boolean useCustomTradeMarker = false;
+
+    public Callback onTradeMarkersLayout;
+
 
 
 
