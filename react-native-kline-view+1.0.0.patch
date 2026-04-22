@@ -1,46 +1,26 @@
-diff --git a/node_modules/react-native-kline-view/index.d.ts b/node_modules/react-native-kline-view/index.d.ts
-index 549252a..9f4cd53 100644
---- a/node_modules/react-native-kline-view/index.d.ts
-+++ b/node_modules/react-native-kline-view/index.d.ts
-@@ -1,3 +1,4 @@
-+import type React from "react";
- import type {
-   HostComponent,
-   NativeSyntheticEvent,
-@@ -172,6 +173,6 @@ export interface RNKLineViewProps extends ViewProps {
+diff --git a/node_modules/native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/HTKLineConfigManager.java b/node_modules/native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/HTKLineConfigManager.java
+index 6e7dfa8..a3be280 100644
+--- a/node_modules/native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/HTKLineConfigManager.java
++++ b/node_modules/native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/HTKLineConfigManager.java
+@@ -62,7 +62,7 @@ public class HTKLineConfigManager {
  
- export type RNKLineViewComponent = HostComponent<RNKLineViewProps>;
+     public boolean useCustomTradeMarker = false;
  
--declare const RNKLineView: (props: RNKLineViewProps) => ReactNode;
-+declare const RNKLineView: React.ForwardRefExoticComponent<RNKLineViewProps & React.RefAttributes<React.ComponentRef<RNKLineViewComponent>>>;
+-    public Callback onTradeMarkersLayout;
++    public HTKLineCallback onTradeMarkersLayout;
  
- export default RNKLineView;
-diff --git a/node_modules/react-native-kline-view/index.js b/node_modules/react-native-kline-view/index.js
-index 0310165..bbf535f 100644
---- a/node_modules/react-native-kline-view/index.js
-+++ b/node_modules/react-native-kline-view/index.js
-@@ -3,7 +3,7 @@ import { View, StyleSheet, requireNativeComponent } from "react-native";
  
- const RNKLineViewNative = requireNativeComponent("RNKLineView");
  
--function RNKLineView({ tradeComponent, style, ...props }) {
-+const RNKLineView = React.forwardRef(function RNKLineView({ tradeComponent, style, ...props }, ref) {
-   const [markers, setMarkers] = useState([]);
- 
-   const onTradeMarkersLayout = useCallback((event) => {
-@@ -13,6 +13,7 @@ function RNKLineView({ tradeComponent, style, ...props }) {
-   return (
-     <View style={style}>
-       <RNKLineViewNative
-+        ref={ref}
-         {...props}
-         style={StyleSheet.absoluteFill}
-         useCustomTradeMarker={!!tradeComponent}
-@@ -42,6 +43,6 @@ function RNKLineView({ tradeComponent, style, ...props }) {
-         })}
-     </View>
-   );
--}
-+});
- 
- export default RNKLineView;
+diff --git a/node_modules/native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/container/HTKLineContainerView.java b/node_modules/native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/container/HTKLineContainerView.java
+index 737bd3f..e7f4813 100644
+--- a/node_modules/native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/container/HTKLineContainerView.java
++++ b/node_modules/native-kline-view/android/src/main/java/com/github/fujianlian/klinechart/container/HTKLineContainerView.java
+@@ -159,7 +159,7 @@ public class HTKLineContainerView extends RelativeLayout {
+                 );
+             }
+         };
+-        configManager.onTradeMarkersLayout = new Callback() {
++        configManager.onTradeMarkersLayout = new HTKLineCallback() {
+             @Override
+             public void invoke(Object... args) {
+                 @SuppressWarnings("unchecked")

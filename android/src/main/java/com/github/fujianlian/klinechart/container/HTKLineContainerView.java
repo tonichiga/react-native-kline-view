@@ -159,7 +159,7 @@ public class HTKLineContainerView extends RelativeLayout {
                 );
             }
         };
-        configManager.onTradeMarkersLayout = new Callback() {
+        configManager.onTradeMarkersLayout = new HTKLineCallback() {
             @Override
             public void invoke(Object... args) {
                 @SuppressWarnings("unchecked")

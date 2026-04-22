@@ -62,7 +62,7 @@ public class HTKLineConfigManager {
 
     public boolean useCustomTradeMarker = false;
 
-    public Callback onTradeMarkersLayout;
+    public HTKLineCallback onTradeMarkersLayout;
 
 
 
