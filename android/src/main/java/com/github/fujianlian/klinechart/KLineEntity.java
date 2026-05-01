@@ -186,6 +186,10 @@ public class KLineEntity implements IKLine {
 
     public int closeTradeCount = 0;
 
+    public double openTradeTimestamp = Double.NaN;
+
+    public double closeTradeTimestamp = Double.NaN;
+
 
     public List<HTKLineTargetItem> maList = new ArrayList();
     public List<HTKLineTargetItem> maVolumeList = new ArrayList();

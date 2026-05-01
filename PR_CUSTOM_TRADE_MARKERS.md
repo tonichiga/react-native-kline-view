@@ -41,7 +41,7 @@ You can now render trade markers using your own React UI.
 
 ## Screenshot
 
-![Custom trade marker overlay](./example/chart.png)
+![Custom trade marker overlay](./examples/react-native/chart-trade.png.png)
 
 ## Notes
 

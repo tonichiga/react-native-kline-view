@@ -86,6 +86,10 @@ class HTKLineModel: NSObject {
 
     var closeTradeCount: Int = 0
 
+    var openTradeTimestamp: CGFloat = .nan
+
+    var closeTradeTimestamp: CGFloat = .nan
+
     var selectedItemList = [[String: Any]]()
 
     lazy var increment: Bool = {
@@ -130,10 +134,22 @@ class HTKLineModel: NSObject {
             model.openTradeCount = Int(openTradeCount)
         }
 
+        if let openTradeTimestamp = dictionary["openTradeTimestamp"] as? CGFloat {
+            model.openTradeTimestamp = openTradeTimestamp
+        } else if let openTradeTimestamp = dictionary["openTradeTimestamp"] as? Double {
+            model.openTradeTimestamp = CGFloat(openTradeTimestamp)
+        }
+
         if let closeTradeCount = dictionary["closeTradeCount"] as? Int {
             model.closeTradeCount = closeTradeCount
         } else if let closeTradeCount = dictionary["closeTradeCount"] as? CGFloat {
             model.closeTradeCount = Int(closeTradeCount)
+        }
+
+        if let closeTradeTimestamp = dictionary["closeTradeTimestamp"] as? CGFloat {
+            model.closeTradeTimestamp = closeTradeTimestamp
+        } else if let closeTradeTimestamp = dictionary["closeTradeTimestamp"] as? Double {
+            model.closeTradeTimestamp = CGFloat(closeTradeTimestamp)
         }
 
         var selectedItemList = dictionary["selectedItemList"] as? [[String: Any]] ?? [[String: Any]]()

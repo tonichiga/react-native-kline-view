@@ -246,9 +246,19 @@ public class HTKLineConfigManager {
             entity.openTradeCount = ((Number) openTradeCount).intValue();
         }
 
+        Object openTradeTimestamp = keyValue.get("openTradeTimestamp");
+        if (openTradeTimestamp instanceof Number) {
+            entity.openTradeTimestamp = ((Number) openTradeTimestamp).doubleValue();
+        }
+
         Object closeTradeCount = keyValue.get("closeTradeCount");
         if (closeTradeCount instanceof Number) {
             entity.closeTradeCount = ((Number) closeTradeCount).intValue();
+        }
+
+        Object closeTradeTimestamp = keyValue.get("closeTradeTimestamp");
+        if (closeTradeTimestamp instanceof Number) {
+            entity.closeTradeTimestamp = ((Number) closeTradeTimestamp).doubleValue();
         }
 
         return entity;

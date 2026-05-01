@@ -632,11 +632,13 @@ class HTKLineView: UIScrollView {
             let cx = CGFloat(absoluteIndex) * configManager.itemWidth + paddingHorizontal - contentOffset.x
             if !model.openTradePrice.isNaN, !model.openTradePrice.isInfinite, model.openTradeCount > 0 {
                 let y = mainBaseY + (maxValue - model.openTradePrice) / scale
-                markers.append(["x": cx, "y": y, "price": model.openTradePrice, "type": "buy", "count": model.openTradeCount, "timestamp": model.id])
+                let timestamp = model.openTradeTimestamp.isNaN ? model.id : model.openTradeTimestamp
+                markers.append(["x": cx, "y": y, "price": model.openTradePrice, "type": "buy", "count": model.openTradeCount, "timestamp": timestamp])
             }
             if !model.closeTradePrice.isNaN, !model.closeTradePrice.isInfinite, model.closeTradeCount > 0 {
                 let y = mainBaseY + (maxValue - model.closeTradePrice) / scale
-                markers.append(["x": cx, "y": y, "price": model.closeTradePrice, "type": "sell", "count": model.closeTradeCount, "timestamp": model.id])
+                let timestamp = model.closeTradeTimestamp.isNaN ? model.id : model.closeTradeTimestamp
+                markers.append(["x": cx, "y": y, "price": model.closeTradePrice, "type": "sell", "count": model.closeTradeCount, "timestamp": timestamp])
             }
         }
         return markers

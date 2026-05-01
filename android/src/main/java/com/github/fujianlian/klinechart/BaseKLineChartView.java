@@ -863,7 +863,7 @@ public abstract class BaseKLineChartView extends ScrollAndScaleView implements D
                 m.put("price", (double) model.openTradePrice);
                 m.put("type", "buy");
                 m.put("count", model.openTradeCount);
-                m.put("timestamp", (double) model.id);
+                m.put("timestamp", Double.isNaN(model.openTradeTimestamp) ? (double) model.id : model.openTradeTimestamp);
                 markers.add(m);
             }
             if (!Float.isNaN(model.closeTradePrice) && !Float.isInfinite(model.closeTradePrice) && model.closeTradeCount > 0) {
@@ -874,7 +874,7 @@ public abstract class BaseKLineChartView extends ScrollAndScaleView implements D
                 m.put("price", (double) model.closeTradePrice);
                 m.put("type", "sell");
                 m.put("count", model.closeTradeCount);
-                m.put("timestamp", (double) model.id);
+                m.put("timestamp", Double.isNaN(model.closeTradeTimestamp) ? (double) model.id : model.closeTradeTimestamp);
                 markers.add(m);
             }
         }

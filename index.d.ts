@@ -31,6 +31,13 @@ export interface RNKLineTargetItem {
   index: number;
 }
 
+export interface TSelectedIndicators {
+  selectedMainIndicator?: number;
+  selectedSubIndicator?: number;
+}
+
+export type RNKLineDateFormatter = (timestamp: number) => string;
+
 export interface RNKLineModelItem {
   id?: number;
   time?: number;
@@ -48,6 +55,8 @@ export interface RNKLineModelItem {
   closeTradePrice?: number;
   openTradeCount?: number;
   closeTradeCount?: number;
+  openTradeTimestamp?: number;
+  closeTradeTimestamp?: number;
   [key: string]: unknown;
 }
 
@@ -172,6 +181,89 @@ export interface RNKLineViewProps extends ViewProps {
 }
 
 export type RNKLineViewComponent = HostComponent<RNKLineViewProps>;
+
+export declare const TimeConstants: {
+  readonly oneMinute: 1;
+  readonly threeMinute: 2;
+  readonly fiveMinute: 3;
+  readonly fifteenMinute: 4;
+  readonly thirtyMinute: 5;
+  readonly oneHour: 6;
+  readonly fourHour: 7;
+  readonly sixHour: 8;
+  readonly oneDay: 9;
+  readonly oneWeek: 10;
+  readonly oneMonth: 11;
+  readonly minuteHour: -1;
+};
+
+export declare const TimeTypes: {
+  readonly 1: { readonly label: "Minute"; readonly value: -1 };
+  readonly 3: { readonly label: "3 min"; readonly value: 2 };
+  readonly 4: { readonly label: "5 min"; readonly value: 3 };
+  readonly 5: { readonly label: "15 min"; readonly value: 4 };
+  readonly 6: { readonly label: "30 min"; readonly value: 5 };
+  readonly 7: { readonly label: "1 hour"; readonly value: 6 };
+};
+
+export declare const DrawTypeConstants: {
+  readonly none: 0;
+  readonly show: -1;
+  readonly line: 1;
+  readonly horizontalLine: 2;
+  readonly verticalLine: 3;
+  readonly halfLine: 4;
+  readonly parallelLine: 5;
+  readonly rectangle: 101;
+  readonly parallelogram: 102;
+};
+
+export declare const DrawStateConstants: {
+  readonly none: -3;
+  readonly showPencil: -2;
+  readonly showContext: -1;
+};
+
+export declare const IndicatorTypes: {
+  readonly main: {
+    readonly 1: { readonly label: "MA"; readonly value: "ma" };
+    readonly 2: { readonly label: "BOLL"; readonly value: "boll" };
+    readonly 0: { readonly label: "NONE"; readonly value: "none" };
+  };
+  readonly sub: {
+    readonly 3: { readonly label: "MACD"; readonly value: "macd" };
+    readonly 4: { readonly label: "KDJ"; readonly value: "kdj" };
+    readonly 5: { readonly label: "RSI"; readonly value: "rsi" };
+    readonly 6: { readonly label: "WR"; readonly value: "wr" };
+    readonly 0: { readonly label: "NONE"; readonly value: "none" };
+  };
+};
+
+export declare const indicatorSelecters: {
+  isMASelected: (selectedIndicators: TSelectedIndicators) => boolean;
+  isBOLLSelected: (selectedIndicators: TSelectedIndicators) => boolean;
+  isMACDSelected: (selectedIndicators: TSelectedIndicators) => boolean;
+  isKDJSelected: (selectedIndicators: TSelectedIndicators) => boolean;
+  isRSISelected: (selectedIndicators: TSelectedIndicators) => boolean;
+  isWRSelected: (selectedIndicators: TSelectedIndicators) => boolean;
+};
+
+export declare const DrawToolTypes: Record<
+  number,
+  {
+    readonly label: string;
+    readonly value: number;
+  }
+>;
+
+export declare const getTargetList: (
+  selectedIndicators: TSelectedIndicators,
+) => RNKLineTargetList;
+
+export declare const normalizeKLineModelArray: (
+  modelArray: RNKLineModelItem[],
+  getDateString: RNKLineDateFormatter,
+) => RNKLineModelItem[];
 
 declare const RNKLineView: React.ForwardRefExoticComponent<
   RNKLineViewProps &
