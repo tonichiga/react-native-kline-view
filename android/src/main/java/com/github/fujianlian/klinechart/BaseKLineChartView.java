@@ -282,7 +282,9 @@ public abstract class BaseKLineChartView extends ScrollAndScaleView implements D
             drawText(canvas);
             drawMaxAndMin(canvas);
             drawValue(canvas, isLongPress ? mSelectedIndex : mStopIndex);
-            drawClosePriceLine(canvas);
+            if (configManager.paddingRight > 0) {
+                drawClosePriceLine(canvas);
+            }
             drawSelector(canvas);
         }
         canvas.restore();
