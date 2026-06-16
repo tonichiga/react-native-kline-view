@@ -198,7 +198,9 @@ class HTKLineView: UIScrollView {
 
             drawHighLow(context)
             drawTime(context)
-            drawClosePrice(context)
+            if configManager.paddingRight > 0 {
+                drawClosePrice(context)
+            }
             drawSelectedLine(context)
             drawSelectedBoard(context)
             drawSelectedTime(context)
